@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CurlyCurl</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign-Up</string>
+    <string name="title_activity_navigation_menu">NavigationMenu</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_navigation">Navigation</string>
+</resources>
