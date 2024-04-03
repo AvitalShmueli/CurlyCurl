@@ -24,7 +24,7 @@ public class OpeningScreenActivity extends AppCompatActivity {
         Glide
                 .with(this)
                 .load(R.drawable.cropped_logo_title)
-                .centerCrop()
+                .fitCenter()
                 .placeholder(R.drawable.background)
                 .into(main_IMG_logo);
 

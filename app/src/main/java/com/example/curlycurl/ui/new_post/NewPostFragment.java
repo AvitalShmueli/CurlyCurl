@@ -1,4 +1,4 @@
-package com.example.curlycurl.ui.notifications;
+package com.example.curlycurl.ui.new_post;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.curlycurl.databinding.FragmentNotificationsBinding;
+import com.example.curlycurl.databinding.FragmentDashboardBinding;
 
-public class NotificationsFragment extends Fragment {
+public class NewPostFragment extends Fragment {
 
-    private FragmentNotificationsBinding binding;
+    private FragmentDashboardBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        NotificationsViewModel notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
+        NewPostViewModel newPostViewModel =
+                new ViewModelProvider(this).get(NewPostViewModel.class);
 
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textDashboard;
+        newPostViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

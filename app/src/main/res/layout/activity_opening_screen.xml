@@ -1,68 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/deep_purple200"
+    android:orientation="vertical"
     tools:context=".OpeningScreenActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <RelativeLayout
+        android:layout_height="0dp"
+        android:layout_weight="8">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/main_IMG_logo"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8">
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:scaleType="centerInside"
+            android:src="@drawable/cropped_logo_title" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/main_IMG_logo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:scaleType="fitCenter"
-                android:src="@drawable/cropped_logo_title"/>
-
-            <!--com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:elevation="20dp"
-                android:fontFamily="cursive"
-                android:gravity="center"
-                android:shadowColor="@color/deep_purple200"
-                android:shadowRadius="@integer/material_motion_duration_medium_1"
-                android:text="@string/app_name"
-                android:textColor="@color/black"
-                android:textSize="@dimen/app_name_text_size"
-                android:textStyle="bold" /-->
-        </RelativeLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/main_BTN_login"
+        <!--com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/margin_buttons"
-            android:text="@string/login"
-            android:textSize="@dimen/buttons_text_size"
-            app:cornerRadius="50dp"
-            app:backgroundTint="@color/purple800"/>
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:elevation="20dp"
+            android:fontFamily="cursive"
+            android:gravity="center"
+            android:shadowColor="@color/deep_purple200"
+            android:shadowRadius="@integer/material_motion_duration_medium_1"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textSize="@dimen/app_name_text_size"
+            android:textStyle="bold" /-->
+    </RelativeLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/main_BTN_signup"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="@dimen/margin_buttons"
-            android:layout_marginStart="@dimen/margin_buttons"
-            android:layout_marginEnd="@dimen/margin_buttons"
-            android:text="@string/sign_up"
-            android:textSize="@dimen/buttons_text_size"
-            app:cornerRadius="50dp"
-            app:backgroundTint="@color/purple800"
-            />
-    </LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/main_BTN_login"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_buttons"
+        android:layout_weight="1"
+        android:text="@string/login"
+        android:textSize="@dimen/buttons_text_size"
+        app:backgroundTint="@color/purple800"
+        app:cornerRadius="50dp" />
 
-</RelativeLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/main_BTN_signup"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/margin_buttons"
+        android:layout_marginEnd="@dimen/margin_buttons"
+        android:layout_marginBottom="@dimen/margin_buttons"
+        android:layout_weight="1"
+        android:text="@string/sign_up"
+        android:textSize="@dimen/buttons_text_size"
+        app:backgroundTint="@color/purple800"
+        app:cornerRadius="50dp" />
+</LinearLayout>
+
