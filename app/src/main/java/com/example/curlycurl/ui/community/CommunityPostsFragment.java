@@ -1,4 +1,4 @@
-package com.example.curlycurl.ui.profile;
+package com.example.curlycurl.ui.community;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,27 +12,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.curlycurl.Adapters.MyProductRecyclerViewAdapter;
+import com.example.curlycurl.Adapters.MyItemRecyclerViewAdapter;
 import com.example.curlycurl.R;
 import com.example.curlycurl.placeholder.PlaceholderContent;
 
 /**
  * A fragment representing a list of Items.
  */
-public class ProductFragment extends Fragment {
+public class CommunityPostsFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 2;
+    private int mColumnCount = 1;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ProductFragment() {
+    public CommunityPostsFragment() {
     }
 
     @SuppressWarnings("unused")
-    public static ProductFragment newInstance(int columnCount) {
-        ProductFragment fragment = new ProductFragment();
+    public static CommunityPostsFragment newInstance(int columnCount) {
+        CommunityPostsFragment fragment = new CommunityPostsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -51,7 +51,7 @@ public class ProductFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_product_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_community_posts_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -62,8 +62,12 @@ public class ProductFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyProductRecyclerViewAdapter(PlaceholderContent.ITEMS));
+            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS));
         }
         return view;
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

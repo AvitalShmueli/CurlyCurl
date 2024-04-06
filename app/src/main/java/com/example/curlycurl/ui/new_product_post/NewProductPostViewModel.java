@@ -1,23 +1,19 @@
-package com.example.curlycurl.ui.profile;
+package com.example.curlycurl.ui.new_product_post;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ProfileViewModel extends ViewModel {
+public class NewProductPostViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    public ProfileViewModel() {
+    public NewProductPostViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("My hair products");
+        mText.setValue("This is dashboard fragment");
     }
 
     public LiveData<String> getText() {
-        return mText;
-    }
-
-    public LiveData<String> getUsername() {
         return mText;
     }
 }

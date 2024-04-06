@@ -10,4 +10,6 @@
     <color name="deep_purpleA100">#B388FF</color>
     <color name="deep_purple200">#B39DDB</color>
     <color name="purple800">#6A1B9A</color>
+    <color name="light_purple">#CDACE6</color>
+    <color name="dark_purple">#7030A0</color>
 </resources>

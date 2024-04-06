@@ -47,4 +47,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     //Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    //Material Design Component library
+    implementation("com.google.android.material:material:1.11.0")
+
 }

@@ -1,4 +1,4 @@
-package com.example.curlycurl.ui.profile;
+package com.example.curlycurl.Adapters;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -6,16 +6,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.curlycurl.databinding.FragmentCommunityPostBinding;
 import com.example.curlycurl.placeholder.PlaceholderContent.PlaceholderItem;
-import com.example.curlycurl.databinding.FragmentProductBinding;
-import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
- * TODO: Replace the implementation with code for your data type.
- */
+ * */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<PlaceholderItem> mValues;
@@ -27,16 +25,15 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        return new ViewHolder(FragmentProductBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new ViewHolder(FragmentCommunityPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
 
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mProductNameView.setText(mValues.get(position).content);
-        holder.mProductDescriptionView.setText(mValues.get(position).details);
+        //holder.mIdView.setText(mValues.get(position).id);
+        holder.mContentView.setText(mValues.get(position).content);
     }
 
     @Override
@@ -45,23 +42,19 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
-        public final TextView mProductNameView;
-        public final TextView mProductDescriptionView;
-        public final ShapeableImageView mImageView;
+        //public final TextView mIdView;
+        public final TextView mContentView;
         public PlaceholderItem mItem;
 
-        public ViewHolder(FragmentProductBinding binding) {
+        public ViewHolder(FragmentCommunityPostBinding binding) {
             super(binding.getRoot());
-            mIdView = binding.itemNumber;
-            mProductNameView = binding.productLBLName;
-            mImageView = binding.productIMGPhoto;
-            mProductDescriptionView = binding.productLBLDescription;
+            //mIdView = binding.itemNumber;
+            mContentView = binding.communityLBLPost;
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mProductNameView.getText() + "'";
+            return super.toString() + " '" + mContentView.getText() + "'";
         }
     }
 }

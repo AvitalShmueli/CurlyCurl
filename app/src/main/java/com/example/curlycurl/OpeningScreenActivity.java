@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
@@ -28,7 +29,13 @@ public class OpeningScreenActivity extends AppCompatActivity {
                 .placeholder(R.drawable.background)
                 .into(main_IMG_logo);
 
-        main_BTN_login.setOnClickListener(view -> changeActivity());
+        main_BTN_login.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(OpeningScreenActivity.this,MainActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void changeActivity() {

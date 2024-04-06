@@ -5,6 +5,7 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_profile">
 
+
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.curlycurl.ui.profile.ProfileFragment"
@@ -13,13 +14,32 @@
 
     <fragment
         android:id="@+id/navigation_new_post"
-        android:name="com.example.curlycurl.ui.new_post.NewPostFragment"
+        android:name="com.example.curlycurl.ui.new_product_post.NewProductPostFragment"
         android:label="@string/title_new_post"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_new_product_post" />
 
     <fragment
         android:id="@+id/navigation_explore"
         android:name="com.example.curlycurl.ui.explore.ExploreFragment"
         android:label="@string/title_explore"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_explore" />
+
+    <fragment
+        android:id="@+id/navigation_community"
+        android:name="com.example.curlycurl.ui.community.CommunityFragment"
+        android:label="@string/title_community"
+        tools:layout="@layout/fragment_community" >
+        <action
+            android:id="@+id/action_navigation_community_to_new_community_post"
+            app:destination="@id/navigation_new_community_post" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_new_community_post"
+        android:name="com.example.curlycurl.ui.new_community_post.NewCommunityPostFragment"
+        android:label="New Post"
+        tools:layout="@layout/fragment_new_community_post" >
+    </fragment>
+
+
 </navigation>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/deep_purple200"
+    android:background="@color/light_purple"
     android:orientation="vertical"
     tools:context=".OpeningScreenActivity">
 
@@ -44,7 +44,7 @@
         android:layout_weight="1"
         android:text="@string/login"
         android:textSize="@dimen/buttons_text_size"
-        app:backgroundTint="@color/purple800"
+        app:backgroundTint="@color/dark_purple"
         app:cornerRadius="50dp" />
 
     <com.google.android.material.button.MaterialButton
@@ -57,7 +57,7 @@
         android:layout_weight="1"
         android:text="@string/sign_up"
         android:textSize="@dimen/buttons_text_size"
-        app:backgroundTint="@color/purple800"
+        app:backgroundTint="@color/dark_purple"
         app:cornerRadius="50dp" />
 </LinearLayout>
 

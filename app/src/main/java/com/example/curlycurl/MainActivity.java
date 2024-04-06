@@ -13,7 +13,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.curlycurl.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-
+    //private NavController navController;
     private ActivityMainBinding binding;
 
     @Override
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_profile, R.id.navigation_new_post, R.id.navigation_explore)
+                R.id.navigation_profile, R.id.navigation_new_post, R.id.navigation_explore,R.id.navigation_community)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -35,4 +35,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /*
+    @Override
+    public boolean onSupportNavigateUp() {
+        return navController.navigateUp() || super.onSupportNavigateUp();
+    }
+    */
 }
