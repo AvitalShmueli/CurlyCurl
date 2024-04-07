@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import android.view.ViewGroup;
 
 import com.example.curlycurl.R;
 import com.example.curlycurl.databinding.FragmentCommunityBinding;
-import com.example.curlycurl.ui.new_community_post.NewCommunityPostFragment;
 import com.google.android.material.button.MaterialButton;
 
 public class CommunityFragment extends Fragment {
@@ -36,15 +36,16 @@ public class CommunityFragment extends Fragment {
         transaction.replace(R.id.community_FRAGMENT_list, childFragment).commit();
 
         productPost_BTN_post = binding.productPostBTNPost;
-        productPost_BTN_post.setOnClickListener(v -> replaceFragment());
+        productPost_BTN_post.setOnClickListener(v -> replaceFragment(v));
 
         return root;
     }
 
-    private void replaceFragment() {
-        //Navigation.findNavController(view).navigate(R.id.action_navigation_community_to_new_community_post);
+    private void replaceFragment(View v) {
+        Navigation.findNavController(v).navigate(R.id.action_navigation_create_new_community_post);
         /*NewCommunityPostFragment newCommunityPostFragment = new NewCommunityPostFragment();
         getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main,newCommunityPostFragment).commit();*/
+
     }
 
     public void onDestroyView() {

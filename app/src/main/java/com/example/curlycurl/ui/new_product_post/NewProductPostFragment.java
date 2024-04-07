@@ -16,8 +16,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 
+import com.example.curlycurl.R;
 import com.example.curlycurl.databinding.FragmentNewProductPostBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textview.MaterialTextView;
+
+import java.util.Objects;
 
 public class NewProductPostFragment extends Fragment {
 
@@ -27,6 +31,7 @@ public class NewProductPostFragment extends Fragment {
     private MaterialTextView productPost_LBL_addTags;
     private MaterialTextView productPost_LBL_addPhoto;
     private MaterialTextView productPost_LBL_addLocation;
+    private BottomNavigationView navBar;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -36,6 +41,8 @@ public class NewProductPostFragment extends Fragment {
 
         binding = FragmentNewProductPostBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        /*navBar = requireActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.INVISIBLE);*/
 
         productPost_LBL_title = binding.productPostLBLTitle;
         //newProductPostViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
@@ -61,6 +68,7 @@ public class NewProductPostFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
 
 
 }
