@@ -4,13 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 public class OpeningScreenActivity extends AppCompatActivity {
 
@@ -24,18 +25,12 @@ public class OpeningScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opening_screen);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         mAuth = FirebaseAuth.getInstance();
-
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            String uid = user.getUid();
-            String phone = user.getPhoneNumber();
-            String name = user.getDisplayName();
-            String email = user.getEmail();
             changeActivity(true, user);
-
         } else {
             findViews();
             Glide
@@ -45,16 +40,15 @@ public class OpeningScreenActivity extends AppCompatActivity {
                     .placeholder(R.drawable.background)
                     .into(main_IMG_logo);
 
-            main_BTN_login.setOnClickListener(view -> changeActivity(false,null));
+            main_BTN_login.setOnClickListener(view -> changeActivity(false, null));
         }
     }
 
-    private void changeActivity(boolean isConnected,FirebaseUser user) {
+    private void changeActivity(boolean isConnected, FirebaseUser user) {
         Intent destination;
-        if(isConnected) {
+        if (isConnected)
             destination = new Intent(this, MainActivity.class);
-            destination.putExtra(MainActivity.KEY_USER, user.getDisplayName());
-        }
+
         else destination = new Intent(this, LoginActivity.class);
         startActivity(destination);
         finish();

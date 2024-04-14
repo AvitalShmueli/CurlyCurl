@@ -6,39 +6,34 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
-
     private FirebaseAuth mAuth;
-
+    private FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         mAuth = FirebaseAuth.getInstance();
-
-        FirebaseUser user = mAuth.getCurrentUser();
-
+        user = mAuth.getCurrentUser();
         if (user == null) {
             login();
         } else {
-            String uid = user.getUid();
-            String phone = user.getPhoneNumber();
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            changeActivity();
+            changeActivity(MainActivity.class);
         }
 
     }
@@ -66,7 +61,9 @@ public class LoginActivity extends AppCompatActivity {
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
-                .setLogo(R.drawable.background)
+                //.setTheme(R.style.LoginUIStyle)
+                //.setLogo(R.drawable.full_logo_title)
+                .setIsSmartLockEnabled(false)
                 .build();
         signInLauncher.launch(signInIntent);
     }
@@ -75,20 +72,51 @@ public class LoginActivity extends AppCompatActivity {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
             // Successfully signed in
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            // ...
+            int x=1;
+            //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            user = mAuth.getCurrentUser();
+            if (user != null) {
+                long creationTimestamp = Objects.requireNonNull(user.getMetadata()).getCreationTimestamp();
+                long lastSignInTimestamp = user.getMetadata().getLastSignInTimestamp();
+                if (creationTimestamp == lastSignInTimestamp) {
+                    //do create new user
+                    FirebaseManager.getInstance().createUsersProfileInDB(user);
+                    changeActivity(EditProfileInfoActivity.class);
+                    //createUsersProfileInDB(user);
+                } else {
+                    //user is exists, just do login
+                    changeActivity(MainActivity.class);
+                }
+            }
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
             // response.getError().getErrorCode() and handle the error.
-            // ...
+            Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+            changeActivity(OpeningScreenActivity.class);
         }
+
+
     }
 
 
-    private void changeActivity() {
-        Intent mainActivity = new Intent(this, MainActivity.class);
-        startActivity(mainActivity);
+    /*
+    private void createUsersProfileInDB(FirebaseUser user){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        User newUserProfile = new User().
+                setUsername(user.getDisplayName())
+                .setEmail(user.getEmail())
+                .setUuid(user.getUid());
+
+        db.collection("users").document(user.getUid()).set(newUserProfile);
+        changeActivity(EditProfileInfoActivity.class);
+
+    }*/
+
+
+    private void changeActivity(Class<?> cls) {
+        Intent destination = new Intent(this, cls);
+        startActivity(destination);
         finish();
     }
 }

@@ -10,13 +10,18 @@
         android:id="@+id/navigation_profile"
         android:name="com.example.curlycurl.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_new_post"
         android:name="com.example.curlycurl.ui.new_product_post.NewProductPostFragment"
         android:label="@string/title_new_post"
-        tools:layout="@layout/fragment_new_product_post" />
+        tools:layout="@layout/fragment_new_product_post" >
+        <action
+            android:id="@+id/action_navigation_return_to_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_explore"

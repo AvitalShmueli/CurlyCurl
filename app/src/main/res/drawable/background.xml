@@ -4,6 +4,9 @@
     <item>
         <shape>
             <solid android:color="@color/light_purple" />
+            <size
+                android:width="320dp"
+                android:height="640dp" />
         </shape>
     </item>
 

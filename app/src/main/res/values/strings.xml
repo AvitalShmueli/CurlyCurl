@@ -26,5 +26,14 @@
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">YOUR_APP_ID</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fbYOUR_APP_ID</string>
+    <string name="sign_out">Sign out</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="user_name">User Name</string>
+    <string name="email">Email</string>
+    <string name="save">save</string>
+    <string name="my_hair_products">My hair products</string>
+    <string name="default_date">JAN 01 2001</string>
+    <string name="change_picture">Change Picture</string>
+    <string name="remove_image">Remove Image</string>
 
 </resources>

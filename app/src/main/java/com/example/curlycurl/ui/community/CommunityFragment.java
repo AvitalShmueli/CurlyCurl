@@ -2,7 +2,6 @@ package com.example.curlycurl.ui.community;
 
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;

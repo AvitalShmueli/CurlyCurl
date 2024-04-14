@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.placeholder.PlaceholderContent.PlaceholderItem;
 import com.example.curlycurl.databinding.FragmentProductBinding;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -18,9 +19,9 @@ import java.util.List;
  */
 public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProductRecyclerViewAdapter.ViewHolder> {
 
-    private final List<PlaceholderItem> mValues;
+    private final List<Product> mValues;
 
-    public MyProductRecyclerViewAdapter(List<PlaceholderItem> items) {
+    public MyProductRecyclerViewAdapter(List<Product> items) {
         mValues = items;
     }
 
@@ -34,9 +35,8 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mProductNameView.setText(mValues.get(position).content);
-        holder.mProductDescriptionView.setText(mValues.get(position).details);
+        holder.mProductNameView.setText(mValues.get(position).getProductName());
+        holder.mProductDescriptionView.setText(mValues.get(position).getDescription());
     }
 
     @Override
@@ -45,15 +45,13 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
         public final TextView mProductNameView;
         public final TextView mProductDescriptionView;
         public final ShapeableImageView mImageView;
-        public PlaceholderItem mItem;
+        public Product mItem;
 
         public ViewHolder(FragmentProductBinding binding) {
             super(binding.getRoot());
-            mIdView = binding.itemNumber;
             mProductNameView = binding.productLBLName;
             mImageView = binding.productIMGPhoto;
             mProductDescriptionView = binding.productLBLDescription;

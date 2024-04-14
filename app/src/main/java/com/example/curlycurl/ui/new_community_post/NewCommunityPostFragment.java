@@ -23,9 +23,9 @@ public class NewCommunityPostFragment extends Fragment{
     private FragmentNewCommunityPostBinding binding;
 
     private MaterialTextView productPost_LBL_title;
-    private MaterialTextView productPost_LBL_addTags;
-    private MaterialTextView productPost_LBL_addPhoto;
-    private MaterialTextView productPost_LBL_addLocation;
+    private MaterialButton communityPost_BTN_addTags;
+    private MaterialButton communityPost_BTN_selectImage;
+    private MaterialButton communityPost_BTN_addLocation;
     private MaterialButton communityPost_BTN_post;
     private ShapeableImageView communityPost_IMG_back;
     private BottomNavigationView navBar;
@@ -43,15 +43,15 @@ public class NewCommunityPostFragment extends Fragment{
 
         productPost_LBL_title = binding.communityPostLBLTitle;
         //newProductPostViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        productPost_LBL_addTags = binding.communityPostLBLAddTags;
-        productPost_LBL_addPhoto = binding.productPostLBLAddPhoto;
-        productPost_LBL_addLocation = binding.communityPostLBLAddLocation;
+        communityPost_BTN_addTags = binding.communityPostBTNAddTags;
+        communityPost_BTN_selectImage = binding.communityPostBTNSelectImage;
+        communityPost_BTN_addLocation = binding.communityPostBTNAddLocation;
         communityPost_BTN_post = binding.communityPostBTNPost;
         communityPost_IMG_back = binding.communityPostIMGBack;
 
-        productPost_LBL_addTags.setOnClickListener(view -> toast("Tag"));
-        productPost_LBL_addPhoto.setOnClickListener(view -> toast("Photo"));
-        productPost_LBL_addLocation.setOnClickListener(view -> toast("Location"));
+        communityPost_BTN_addTags.setOnClickListener(view -> toast("Tag"));
+        communityPost_BTN_selectImage.setOnClickListener(view -> toast("Photo"));
+        communityPost_BTN_addLocation.setOnClickListener(view -> toast("Location"));
 
         communityPost_BTN_post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +74,9 @@ public class NewCommunityPostFragment extends Fragment{
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    private void resetInputControls() {
+
+    }
 
     @Override
     public void onDestroyView() {

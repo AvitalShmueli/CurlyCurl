@@ -1,5 +1,6 @@
 package com.example.curlycurl.ui.profile;
 
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -13,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.curlycurl.Adapters.MyProductRecyclerViewAdapter;
+import com.example.curlycurl.FirebaseManager;
+import com.example.curlycurl.Models.User;
 import com.example.curlycurl.R;
-import com.example.curlycurl.placeholder.PlaceholderContent;
+import com.google.firebase.firestore.DocumentReference;
+
 
 /**
  * A fragment representing a list of Items.
@@ -23,14 +27,11 @@ public class ProductFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 2;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ProductFragment() {
-    }
+    private FirebaseManager firebaseManager;
+    private User connectedUser;
 
-    @SuppressWarnings("unused")
+
+
     public static ProductFragment newInstance(int columnCount) {
         ProductFragment fragment = new ProductFragment();
         Bundle args = new Bundle();
@@ -53,17 +54,27 @@ public class ProductFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_product_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        firebaseManager = FirebaseManager.getInstance();
+        DocumentReference refUser = firebaseManager.getRefUser();
+
+        refUser.get().addOnSuccessListener(documentSnapshot -> {
+            connectedUser = documentSnapshot.toObject(User.class);
+            if (connectedUser != null) {
+                // Set the adapter
+                if (view instanceof RecyclerView) {
+                    Context context = view.getContext();
+                    RecyclerView recyclerView = (RecyclerView) view;
+                    if (mColumnCount <= 1) {
+                        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                    } else {
+                        recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                    }
+                    //recyclerView.setAdapter(new MyProductRecyclerViewAdapter(PlaceholderContent.ITEMS));
+                    recyclerView.setAdapter(new MyProductRecyclerViewAdapter(connectedUser.getAll_products()));
+                }
             }
-            recyclerView.setAdapter(new MyProductRecyclerViewAdapter(PlaceholderContent.ITEMS));
-        }
+        });
+
         return view;
     }
 }
