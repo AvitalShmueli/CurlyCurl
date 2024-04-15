@@ -70,7 +70,8 @@ public class ProductFragment extends Fragment {
                         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                     }
                     //recyclerView.setAdapter(new MyProductRecyclerViewAdapter(PlaceholderContent.ITEMS));
-                    recyclerView.setAdapter(new MyProductRecyclerViewAdapter(connectedUser.getAll_products()));
+                    if(connectedUser.getAll_products()!=null)
+                        recyclerView.setAdapter(new MyProductRecyclerViewAdapter(connectedUser.getAll_products()));
                 }
             }
         });
