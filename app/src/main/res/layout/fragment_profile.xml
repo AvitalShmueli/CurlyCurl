@@ -23,14 +23,15 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_toLeftOf="@id/profile_BTN_signOut"
-            android:layout_toRightOf="@id/imageView"
+            android:layout_toRightOf="@id/profile_IMG_user"
             android:textAlignment="center"
             android:textSize="@dimen/profile_text_size"
             android:textStyle="bold"
+            android:textColor="@color/dark_purple"
             tools:text="UserName" />
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imageView"
+            android:id="@+id/profile_IMG_user"
             android:layout_width="@dimen/profile_image_diameter"
             android:layout_height="@dimen/profile_image_diameter"
             android:layout_marginVertical="@dimen/activity_vertical_margin"
@@ -46,10 +47,11 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_toLeftOf="@id/profile_BTN_signOut"
-            android:layout_toRightOf="@id/imageView"
+            android:layout_toRightOf="@id/profile_IMG_user"
             android:textAlignment="center"
             android:textSize="@dimen/profile_text_size"
             android:textStyle="bold"
+            android:textColor="@color/dark_purple"
             tools:text="0 posts" />
 
         <com.google.android.material.button.MaterialButton
@@ -60,6 +62,7 @@
             android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:backgroundTint="@color/dark_purple"
+            android:textColor="@color/white"
             android:text="@string/sign_out" />
 
     </RelativeLayout>

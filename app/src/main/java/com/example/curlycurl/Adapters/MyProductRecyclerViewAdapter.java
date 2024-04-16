@@ -2,14 +2,17 @@ package com.example.curlycurl.Adapters;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.curlycurl.Models.Product;
+import com.example.curlycurl.R;
 import com.example.curlycurl.placeholder.PlaceholderContent.PlaceholderItem;
 import com.example.curlycurl.databinding.FragmentProductBinding;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.util.List;
 
@@ -19,10 +22,12 @@ import java.util.List;
  */
 public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProductRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Product> mValues;
+    private final List<Product> productList;
+    private Context context;
 
-    public MyProductRecyclerViewAdapter(List<Product> items) {
-        mValues = items;
+    public MyProductRecyclerViewAdapter(Context context, List<Product> items) {
+        this.context = context;
+        productList = items;
     }
 
     @Override
@@ -34,19 +39,25 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mProductNameView.setText(mValues.get(position).getProductName());
-        holder.mProductDescriptionView.setText(mValues.get(position).getDescription());
+        holder.mItem = productList.get(position);
+        holder.mProductNameView.setText(productList.get(position).getProductName());
+        holder.mProductDescriptionView.setText(productList.get(position).getDescription());
+        Glide
+                .with(context)
+                .load(productList.get(position).getImageURL())
+                .fitCenter()
+                .placeholder(R.drawable.baseline_image_24)
+                .into(holder.mImageView);
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return productList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mProductNameView;
-        public final TextView mProductDescriptionView;
+        public final MaterialTextView mProductNameView;
+        public final MaterialTextView mProductDescriptionView;
         public final ShapeableImageView mImageView;
         public Product mItem;
 

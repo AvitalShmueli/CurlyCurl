@@ -21,7 +21,6 @@ import com.google.android.material.imageview.ShapeableImageView;
 public class ExploreFragment extends Fragment {
 
     private FragmentExploreBinding binding;
-    private Fragment childFragment;
     private MaterialButton explore_BTN_marketplace;
     private MaterialButton explore_BTN_community;
     private ShapeableImageView explore_IMG_map;
@@ -35,19 +34,26 @@ public class ExploreFragment extends Fragment {
 
         binding = FragmentExploreBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        showAsMap = false;
 
+        createBinding();
+        initViews();
+
+        showChildFragment(0);
+
+        return root;
+    }
+
+    private void createBinding() {
         explore_BTN_marketplace = binding.exploreBTNMarketplace;
         explore_BTN_community = binding.exploreBTNCommunity;
         explore_IMG_map = binding.exploreIMGMap;
+    }
 
-        showChildFragment(0);
-        showAsMap = false;
-
+    private void initViews(){
         explore_BTN_marketplace.setOnClickListener(v -> showChildFragment(0));
         explore_BTN_community.setOnClickListener(v -> showChildFragment(1));
         explore_IMG_map.setOnClickListener(v -> showAsMap(!showAsMap));
-
-        return root;
     }
 
     private void showAsMap(boolean show) {
@@ -55,10 +61,11 @@ public class ExploreFragment extends Fragment {
     }
 
     private void showChildFragment(int fragment) {
+        Fragment childFragment;
         if (fragment == 0) {
             explore_BTN_marketplace.setPaintFlags(explore_BTN_marketplace.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             explore_BTN_community.setPaintFlags(0);
-            childFragment = new ProductFragment();
+            childFragment = new ProductFragment(ProductFragment.ProductsFragmentMode.EXPLORE);
         } else {
             explore_BTN_marketplace.setPaintFlags(0);
             explore_BTN_community.setPaintFlags(explore_BTN_community.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

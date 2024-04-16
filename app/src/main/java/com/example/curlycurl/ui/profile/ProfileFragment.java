@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.example.curlycurl.FirebaseManager;
 import com.example.curlycurl.Models.User;
 import com.example.curlycurl.OpeningScreenActivity;
@@ -21,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -30,6 +32,11 @@ public class ProfileFragment extends Fragment {
     public static final String KEY_UUID = "KEY_UUID";
     public static final String KEY_USERNAME = "KEY_USERNAME";
     private FragmentProfileBinding binding;
+
+    private TextView txt_username, txt_postsNum;
+    private ShapeableImageView profile_IMG_user;
+    private MaterialButton profile_BTN_signOut;
+    private FirebaseManager firebaseManager;
     private User connectedUser;
 
 
@@ -37,37 +44,31 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         //ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
-        //connectedUser = FirebaseManager.getInstance().getConnectedUserProfile();
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        int x = 1;
-        FirebaseManager firebaseManager = FirebaseManager.getInstance();
-        /*
-        Bundle args = getArguments();
-        if (args != null) {
-            uuid = args.getString(KEY_UUID,"");
-            username = args.getString(KEY_USERNAME,"A_S");
-        }*/
 
+        firebaseManager = FirebaseManager.getInstance();
 
-        Fragment childFragment = new ProductFragment();
+        createBinding();
+        initViews();
+
+        Fragment childFragment = new ProductFragment(ProductFragment.ProductsFragmentMode.USER);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.profile_FRAGMENT_list, childFragment).commit();
 
+        return root;
+    }
 
-        final TextView txt_username = binding.profileLBLUsername;
-        final TextView txt_postsNum = binding.profileLBLPostsNum;
+    private void createBinding() {
+        txt_username = binding.profileLBLUsername;
+        txt_postsNum = binding.profileLBLPostsNum;
+        profile_IMG_user = binding.profileIMGUser;
+        profile_BTN_signOut = binding.profileBTNSignOut;
 
+    }
 
-
-        /*
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser mUser = mAuth.getCurrentUser();
-        DocumentReference refUser = db.collection("users").document(mUser.getUid());
-        */
-
-        DocumentReference refUser = firebaseManager.getRefUser();
+    private void initViews() {
+        DocumentReference refUser = firebaseManager.getRefCurrentUser();
         refUser.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -75,13 +76,16 @@ public class ProfileFragment extends Fragment {
                 if (connectedUser != null) {
                     txt_username.setText(connectedUser.getUsername());
                     txt_postsNum.setText(connectedUser.getCity());
+                    Glide
+                            .with(getContext())
+                            .load(connectedUser.getImageURL())
+                            .centerCrop()
+                            .placeholder(R.drawable.user_photo)
+                            .into(profile_IMG_user);
                 }
             }
         });
 
-
-
-        final MaterialButton profile_BTN_signOut = binding.profileBTNSignOut;
         profile_BTN_signOut.setOnClickListener(v -> {
             AuthUI.getInstance()
                     .signOut(requireActivity())
@@ -92,19 +96,18 @@ public class ProfileFragment extends Fragment {
                         }
                     });
         });
+    }
 
-        return root;
+
+    private void changeActivity() {
+        Intent openingScreenActivity = new Intent(requireActivity(), OpeningScreenActivity.class);
+        startActivity(openingScreenActivity);
+        requireActivity().finish();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    private void changeActivity() {
-        Intent openingScreenActivity = new Intent(requireActivity(), OpeningScreenActivity.class);
-        startActivity(openingScreenActivity);
-        requireActivity().finish();
     }
 }

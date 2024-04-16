@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     tools:context=".ui.new_community_post.NewCommunityPostFragment">
 
     <ScrollView
@@ -42,7 +44,16 @@
                     android:textSize="@dimen/title_text_size"
                     android:textStyle="bold" />
 
+
             </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/communityPost_progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminateOnly="true"/>
+
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -50,15 +61,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="6dp"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:hint="@string/hint_product_description">
+                android:hint="@string/write_post">
 
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/communityPost_TXT_post"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="120dp"
                     android:ems="10"
                     android:gravity="start|top"
                     android:inputType="textMultiLine"

@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8">
+        android:layout_weight="10">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/main_IMG_logo"
@@ -41,6 +41,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/margin_buttons"
+        android:layout_marginStart="@dimen/margin_buttons"
+        android:layout_marginTop="@dimen/margin_buttons"
+        android:layout_marginEnd="@dimen/margin_buttons"
+        android:layout_marginBottom="@dimen/margin_buttons"
         android:layout_weight="1"
         android:text="@string/login"
         android:textSize="@dimen/buttons_text_size_big"
@@ -59,6 +63,6 @@
         android:textSize="@dimen/buttons_text_size_big"
         app:backgroundTint="@color/dark_purple"
         app:cornerRadius="50dp"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 </LinearLayout>
 

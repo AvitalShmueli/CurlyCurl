@@ -2,6 +2,8 @@ package com.example.curlycurl.ui.new_product_post;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,8 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -31,39 +36,37 @@ import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.Models.User;
 import com.example.curlycurl.R;
 import com.example.curlycurl.databinding.FragmentNewProductPostBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class NewProductPostFragment extends Fragment {
-
     private FragmentNewProductPostBinding binding;
     private FirebaseManager firebaseManager;
+    private FirebaseStorage storage;
     private User connectedUser;
-
-
-    private TextInputEditText productPost_TXT_productName;
-    private TextInputEditText productPost_TXT_productDescription;
+    private TextInputEditText productPost_TXT_productName, productPost_TXT_productDescription;
     private ShapeableImageView productPost_IMG_ImageView;
-    private MaterialButton productPost_BTN_addTags;
-    private MaterialButton productPost_BTN_selectImage;
-    private MaterialButton productPost_BTN_removeImage;
-    private MaterialButton productPost_BTN_addLocation;
-    private MaterialButton productPost_BTN_post;
-
+    private MaterialButton productPost_BTN_addTags, productPost_BTN_selectImage, productPost_BTN_removeImage, productPost_BTN_addLocation, productPost_BTN_post;
     private ActivityResultLauncher<Intent> resultLauncher;
     private ArrayList<String> itemsProductType;
     private ArrayList<String> itemsProductCondition;
     private AutoCompleteTextView productPost_DD_productType;
     private AutoCompleteTextView productPost_DD_productCondition;
-
-
     private Product.ProductCondition selectedCondition = null;
     private Product.ProductType selectedType = null;
+    private Uri imageUri;
+    private ProgressBar productPost_progressBar;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -75,7 +78,7 @@ public class NewProductPostFragment extends Fragment {
         View root = binding.getRoot();
 
         firebaseManager = FirebaseManager.getInstance();
-
+        storage = FirebaseStorage.getInstance();
 
         createBinding();
         initDropDownValues();
@@ -114,9 +117,11 @@ public class NewProductPostFragment extends Fragment {
         productPost_BTN_addTags = binding.productPostBTNAddTags;
 
         productPost_BTN_post = binding.productPostBTNPost;
+        productPost_progressBar = binding.productPostProgressBar;
     }
 
     private void initViews() {
+        productPost_progressBar.setVisibility(View.GONE);
         productPost_IMG_ImageView.setImageURI(null);
         productPost_IMG_ImageView.setVisibility(View.GONE);
         registerResult();
@@ -126,7 +131,6 @@ public class NewProductPostFragment extends Fragment {
         productPost_DD_productType.setOnItemClickListener((adapterView, view, position, id) -> {
             String item = adapterView.getItemAtPosition(position).toString();
             selectedType = Product.ProductType.valueOf(item);
-            toast("Selected type: " + item);
         });
 
         ArrayAdapter<String> adapterItems_productCondition = new ArrayAdapter<>(requireActivity(), R.layout.dropdown_item, itemsProductCondition);
@@ -134,28 +138,28 @@ public class NewProductPostFragment extends Fragment {
         productPost_DD_productCondition.setOnItemClickListener((adapterView, view, position, id) -> {
             String item = adapterView.getItemAtPosition(position).toString();
             selectedCondition = Product.ProductCondition.valueOf(item);
-            toast("Selected condition: " + item);
         });
-
 
 
         productPost_TXT_productName.addTextChangedListener(postWatcher);
         productPost_TXT_productDescription.addTextChangedListener(postWatcher);
 
+        productPost_TXT_productName.setOnFocusChangeListener(focusChangeListener);
+        productPost_TXT_productDescription.setOnFocusChangeListener(focusChangeListener);
+
         productPost_BTN_addTags.setOnClickListener(view -> toast("Tag"));
+
         productPost_BTN_selectImage.setOnClickListener(view -> pickImage());
         productPost_BTN_removeImage.setOnClickListener(view -> clearImage());
+
         productPost_BTN_addLocation.setOnClickListener(view -> toast("Location"));
 
-
-        DocumentReference refUser = firebaseManager.getRefUser();
+        DocumentReference refUser = firebaseManager.getRefCurrentUser();
         refUser.get().addOnSuccessListener(documentSnapshot -> {
             connectedUser = documentSnapshot.toObject(User.class);
             if (connectedUser != null) {
                 productPost_BTN_post.setOnClickListener(view -> {
                     UUID pid = UUID.randomUUID();
-                    String strProductName = String.valueOf(productPost_TXT_productName.getEditableText());
-                    Log.d(TAG, "strProductName | " + strProductName);
                     Product product = new Product()
                             .setProductId(pid.toString())
                             .setProductName(String.valueOf(productPost_TXT_productName.getEditableText()))
@@ -163,13 +167,60 @@ public class NewProductPostFragment extends Fragment {
                             .setProductType(selectedType)
                             .setCondition(selectedCondition)
                             .setOwnerUID(connectedUser.getUserId())
+                            .setUserName(connectedUser.getUsername())
                             .setCity(connectedUser.getCity());
-                    FirebaseManager.getInstance().createNewProductInDB(product);
-                    changeFragment(view);
+                    if (imageUri != null) {
+                        uploadToFirebase(imageUri, product);
+                    } else {
+                        firebaseManager.createNewProductInDB(product);
+                        changeFragment(view);
+                    }
+
                 });
             }
         });
     }
+
+    private void uploadToFirebase(Uri uri, Product product) {
+        StorageReference fileRef = storage.getReference().child("product_images")
+                .child(System.currentTimeMillis() + "." + getFileExtension(uri));
+        fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        product.setImageURL(uri.toString());
+                        firebaseManager.createNewProductInDB(product);
+                        toast("Uploaded successfully");
+                        productPost_progressBar.setVisibility(View.GONE);
+                        clearImage();
+                        changeFragment(getView());
+                    }
+                });
+
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                productPost_progressBar.setVisibility(View.VISIBLE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                toast("Uploading failed");
+                productPost_progressBar.setVisibility(View.GONE);
+                Log.e(TAG, "Uploading failed | " + uri);
+            }
+        });
+    }
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver cr = requireActivity().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cr.getType(uri));
+    }
+
 
     TextWatcher postWatcher = new TextWatcher() {
         @Override
@@ -187,8 +238,17 @@ public class NewProductPostFragment extends Fragment {
         @Override
         public void afterTextChanged(Editable s) {
 
+
         }
     };
+    View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    };
+
 
     private void clearImage() {
         productPost_IMG_ImageView.setImageURI(null);
@@ -211,7 +271,7 @@ public class NewProductPostFragment extends Fragment {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         try {
-                            Uri imageUri = result.getData().getData();
+                            imageUri = result.getData().getData();
                             productPost_IMG_ImageView.setImageURI(imageUri);
                             Log.d(TAG, "test_imageURI " + imageUri);
                             productPost_IMG_ImageView.setVisibility(View.VISIBLE);
@@ -246,9 +306,4 @@ public class NewProductPostFragment extends Fragment {
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //resetInputControls();
-    }
 }

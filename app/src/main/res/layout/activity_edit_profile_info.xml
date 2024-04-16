@@ -18,6 +18,13 @@
         android:textSize="@dimen/title_text_size"
         android:textStyle="bold" />
 
+    <ProgressBar
+        android:id="@+id/editProfile_progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminateOnly="true"/>
+
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
@@ -95,10 +102,10 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         app:shapeAppearanceOverlay="@style/roundedImageView"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         app:strokeColor="@color/black"
         app:strokeWidth="1dp"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@drawable/user_photo" />
 
 
     <com.google.android.material.button.MaterialButton

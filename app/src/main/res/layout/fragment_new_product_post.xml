@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     tools:context=".ui.new_product_post.NewProductPostFragment">
 
 
@@ -18,6 +20,13 @@
         android:textColor="@color/dark_purple"
         android:textSize="@dimen/title_text_size"
         android:textStyle="bold" />
+
+    <ProgressBar
+        android:id="@+id/productPost_progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminateOnly="true"/>
 
     <ScrollView
         android:id="@+id/nsScroll"
@@ -46,6 +55,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="text"
+                    android:imeOptions="actionDone"
                     android:paddingVertical="15dp"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -185,9 +195,9 @@
                     android:textColor="?attr/colorControlNormal"
                     android:textSize="@dimen/buttons_text_size_small"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:icon="@drawable/baseline_cancel_24"
-                    app:iconTint="@color/dark_purple"
-                    android:visibility="gone" />
+                    app:iconTint="@color/dark_purple" />
 
             </LinearLayout>
 
@@ -227,6 +237,8 @@
                 android:text="@string/post_in_marketplace"
                 android:textSize="@dimen/new_product_text_size"
                 android:enabled="false" />
+
+
 
         </LinearLayout>
 

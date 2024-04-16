@@ -1,5 +1,6 @@
 package com.example.curlycurl;
 
+import com.example.curlycurl.Models.CommunityPost;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -8,26 +9,32 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FirebaseManager {
     private static FirebaseManager instance;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseFirestore db;
-    private User connectedUser;
     private CollectionReference refUsersCollection;
     private DocumentReference refUser;
     private CollectionReference refProductsCollection;
     private DocumentReference refProduct;
+    private CollectionReference refCommunityPostsCollection;
+
 
     private FirebaseManager() {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         if (mUser != null) {
-            refUsersCollection =  db.collection("users");
+            refUsersCollection = db.collection("users");
             refUser = db.collection("users").document(mUser.getUid());
             refProductsCollection = db.collection("products");
+            refCommunityPostsCollection = db.collection("CommunityPosts");
         }
     }
 
@@ -53,13 +60,17 @@ public class FirebaseManager {
         return refUsersCollection;
     }
 
-    public DocumentReference getRefUser() {
+    public DocumentReference getRefCurrentUser() {
         return refUser;
+    }
+
+    public DocumentReference getRefUser(String userId) {
+        return db.collection("users").document(userId);
     }
 
     public void createUsersProfileInDB(FirebaseUser user) {
 
-        connectedUser = new User().
+        User connectedUser = new User().
                 setUsername(user.getDisplayName())
                 .setEmail(user.getEmail())
                 .setUserId(user.getUid());
@@ -77,11 +88,10 @@ public class FirebaseManager {
                 "curlType",
                 user.getCurlType(),
                 "city",
-                user.getCity());
-    }
-
-    public User getConnectedUser() {
-        return connectedUser;
+                user.getCity(),
+                "imageURL",
+                user.getImageURL()
+        );
     }
 
     public boolean isUserConnected() {
@@ -97,12 +107,38 @@ public class FirebaseManager {
     public void createNewProductInDB(Product product) {
         //Log.d(TAG, "owner uuid: " + mUser.getUid() + " | " + product.getOwnerUID());
         //DocumentReference ref = db.collection("users").document(mUser.getUid());
-        refUser.update("all_products", FieldValue.arrayUnion(product));
         refProductsCollection.document(product.getProductId()).set(product);
+        refUser.update("all_products", FieldValue.arrayUnion(product.getProductId()));
     }
 
-    public void signOut(){
+
+    public void createNewCommunityPostInDB(CommunityPost post) {
+        Map<String, Object> docCommunityPost = new HashMap<>();
+        docCommunityPost.put("authorUID",post.getAuthorUID());
+        docCommunityPost.put("userName",post.getUserName());
+        docCommunityPost.put("created",post.getCreated());
+        docCommunityPost.put("city",post.getCity());
+        docCommunityPost.put("imageURL",post.getImageURL());
+        docCommunityPost.put("post",post.getPost());
+        docCommunityPost.put("postId",post.getPostId());
+        refCommunityPostsCollection.document(post.getPostId()).set(docCommunityPost);
+        //refCommunityPostsCollection.document(post.getPostId()).set(post);
+    }
+
+    public CollectionReference getRefCommunityPostsCollection() {
+        return refCommunityPostsCollection;
+    }
+
+    public Query usersProduct() {
+        return refProductsCollection.whereEqualTo("ownerUID", mUser.getUid()).orderBy("created", Query.Direction.DESCENDING);
+    }
+
+
+
+
+    public void signOut() {
         instance = null;
     }
+
 
 }

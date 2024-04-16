@@ -1,5 +1,6 @@
 package com.example.curlycurl.Models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +16,8 @@ public class User {
     private String city;
     private Date birthDate;
     private CurlType curlType;
-    private List<Product> all_products = null;
+    private String imageURL;
+    private List<String> all_products = null; //product id only
 
 
     public User() {
@@ -75,12 +77,23 @@ public class User {
         return this;
     }
 
-    public List<Product> getAll_products() {
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public User setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+        return this;
+    }
+
+    public List<String> getAll_products() {
         return all_products;
     }
 
-    public User setAll_products(List<Product> all_products) {
+    public User setAll_products(List<String> all_products) {
         this.all_products = all_products;
         return this;
     }
+
+
 }

@@ -1,5 +1,9 @@
 package com.example.curlycurl.Models;
 
+import com.google.firebase.Timestamp;
+
+import java.util.Date;
+
 public class Product {
     public enum ProductCondition {
         NEW,
@@ -26,6 +30,8 @@ public class Product {
     private String city;
     private String imageURL;
     private String OwnerUID;
+    private String userName;
+    private Timestamp created = new Timestamp(new Date());
 
     public Product() {
     }
@@ -99,6 +105,24 @@ public class Product {
 
     public Product setOwnerUID(String ownerUID) {
         OwnerUID = ownerUID;
+        return this;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public Product setCreated(Timestamp created) {
+        this.created = created;
+        return this;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public Product setUserName(String userName) {
+        this.userName = userName;
         return this;
     }
 }

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">CurlyCurl</string>
-    <string name="login">Login</string>
+    <string name="login">Login / Sign-Up</string>
     <string name="sign_up">Sign-Up</string>
     <string name="title_activity_navigation_menu">NavigationMenu</string>
     <string name="title_profile">Profile</string>
@@ -35,5 +35,7 @@
     <string name="default_date">JAN 01 2001</string>
     <string name="change_picture">Change Picture</string>
     <string name="remove_image">Remove Image</string>
+    <string name="write_post">Write a post...</string>
+    <string name="date_format">yyyy-MM-dd</string>
 
 </resources>
