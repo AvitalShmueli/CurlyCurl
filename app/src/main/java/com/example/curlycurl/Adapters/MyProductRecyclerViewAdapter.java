@@ -4,9 +4,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.example.curlycurl.Interfaces.Callback_ProductPostSelected;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.R;
 import com.example.curlycurl.placeholder.PlaceholderContent.PlaceholderItem;
@@ -24,10 +26,19 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
 
     private final List<Product> productList;
     private Context context;
+    private Callback_ProductPostSelected callbackProductPostSelected;
+
+
 
     public MyProductRecyclerViewAdapter(Context context, List<Product> items) {
         this.context = context;
         productList = items;
+
+    }
+
+    public MyProductRecyclerViewAdapter setCallbackProductPostSelected(Callback_ProductPostSelected callbackProductPostSelected) {
+        this.callbackProductPostSelected = callbackProductPostSelected;
+        return this;
     }
 
     @Override
@@ -45,9 +56,20 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
         Glide
                 .with(context)
                 .load(productList.get(position).getImageURL())
-                .fitCenter()
+                .centerCrop()
                 .placeholder(R.drawable.baseline_image_24)
                 .into(holder.mImageView);
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(callbackProductPostSelected != null)
+                    callbackProductPostSelected.onProductPostSelected(holder.mItem);
+            }
+        };
+        holder.mProductNameView.setOnClickListener(listener);
+        holder.mProductDescriptionView.setOnClickListener(listener);
+        holder.mImageView.setOnClickListener(listener);
     }
 
     @Override
@@ -74,3 +96,4 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
         }
     }
 }
+

@@ -4,35 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:clickable="true"
     android:focusableInTouchMode="true"
-    tools:context=".ui.new_product_post.NewProductPostFragment">
+    android:orientation="vertical"
+    tools:context=".EditProductPostFragment">
 
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/productPost_LBL_title"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/light_purple"
-        android:gravity="center"
-        android:text="@string/new_product"
-        android:textColor="@color/dark_purple"
-        android:textSize="@dimen/title_text_size"
-        android:textStyle="bold" />
+        android:background="@color/light_purple">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/editProductPost_IMG_back"
+            android:layout_width="@dimen/header_height"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="10dp"
+            android:src="@drawable/baseline_arrow_back_24"
+            android:tint="@color/dark_purple" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/editProductPost_LBL_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_height"
+            android:layout_marginEnd="@dimen/header_height"
+            android:layout_toRightOf="@id/editProductPost_IMG_back"
+            android:background="@color/light_purple"
+            android:gravity="center"
+            android:text="@string/edit_product"
+            android:textColor="@color/dark_purple"
+            android:textSize="@dimen/title_text_size"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <ProgressBar
-        android:id="@+id/productPost_progressBar"
+        android:id="@+id/editProductPost_progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminateOnly="true"/>
+        android:indeterminateOnly="true" />
 
     <ScrollView
         android:id="@+id/nsScroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="?attr/actionBarSize">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,49 +64,49 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/productPost_TXT_productName"
+                    android:id="@+id/editProductPost_TXT_productName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:inputType="text"
                     android:imeOptions="actionDone"
-                    android:paddingVertical="15dp"/>
+                    android:inputType="text"
+                    android:paddingVertical="15dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="6dp"
-                android:hint="@string/product_type"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                android:hint="@string/product_type">
 
                 <AutoCompleteTextView
-                    android:id="@+id/productPost_DD_productType"
+                    android:id="@+id/editProductPost_DD_productType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
                     android:paddingVertical="15dp"
-                    tools:ignore="LabelFor" />
+                    tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="6dp"
-                android:hint="@string/product_condition"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                android:hint="@string/product_condition">
 
                 <AutoCompleteTextView
-                    android:id="@+id/productPost_DD_productCondition"
+                    android:id="@+id/editProductPost_DD_productCondition"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
                     android:paddingVertical="15dp"
-                    tools:ignore="LabelFor" />
+                    tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,15 +122,15 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/productPost_TXT_productDescription"
+                    android:id="@+id/editProductPost_TXT_productDescription"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:ems="10"
                     android:gravity="start|top"
-                    android:paddingVertical="10dp"
                     android:inputType="textMultiLine"
                     android:lines="6"
                     android:overScrollMode="always"
+                    android:paddingVertical="10dp"
                     android:scrollbarStyle="insideInset"
                     android:scrollbars="vertical"
                     android:scrollHorizontally="false" />
@@ -130,10 +144,11 @@
                 android:layout_marginTop="6dp">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/productPost_BTN_addTags"
+                    android:id="@+id/editProductPost_BTN_addTags"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@android:color/transparent"
+                    android:fontFamily="sans-serif"
                     android:gravity="left|center_vertical"
                     android:paddingLeft="0dp"
                     android:text="@string/add_tags"
@@ -142,13 +157,12 @@
                     android:textSize="@dimen/buttons_text_size_small"
                     android:textStyle="bold"
                     app:icon="@drawable/baseline_tag_24"
-                    app:iconTint="@color/dark_purple"
-                    android:fontFamily="sans-serif"/>
+                    app:iconTint="@color/dark_purple" />
 
             </RelativeLayout>
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/productPost_IMG_ImageView"
+                android:id="@+id/editProductPost_IMG_ImageView"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:layout_gravity="center_horizontal"
@@ -165,7 +179,7 @@
 
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/productPost_BTN_selectImage"
+                    android:id="@+id/editProductPost_BTN_selectImage"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="0dp"
@@ -182,7 +196,7 @@
                     app:iconTint="@color/dark_purple" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/productPost_BTN_removeImage"
+                    android:id="@+id/editProductPost_BTN_removeImage"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="0dp"
@@ -209,7 +223,7 @@
                 android:layout_marginTop="6dp">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/productPost_BTN_addLocation"
+                    android:id="@+id/editProductPost_BTN_addLocation"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@android:color/transparent"
@@ -226,7 +240,7 @@
             </RelativeLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/productPost_BTN_post"
+                android:id="@+id/editProductPost_BTN_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -234,10 +248,9 @@
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginBottom="30dp"
                 android:background="@color/dark_purple"
-                android:text="@string/post_in_marketplace"
-                android:textSize="@dimen/new_product_text_size"
-                android:enabled="false" />
-
+                android:enabled="false"
+                android:text="@string/save_changes"
+                android:textSize="@dimen/new_product_text_size" />
 
 
         </LinearLayout>

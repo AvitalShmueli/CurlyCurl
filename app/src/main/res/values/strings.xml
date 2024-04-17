@@ -37,5 +37,11 @@
     <string name="remove_image">Remove Image</string>
     <string name="write_post">Write a post...</string>
     <string name="date_format">yyyy-MM-dd</string>
+    <string name="product_type">Product Type</string>
+    <string name="product_condition">Product Condition</string>
+    <string name="edit_product">Edit Product</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="city">City</string>
+    <string name="your_curls_type">Your curls type</string>
 
 </resources>

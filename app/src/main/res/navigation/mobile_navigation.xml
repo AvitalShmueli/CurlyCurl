@@ -11,6 +11,12 @@
         android:name="com.example.curlycurl.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/navigateToEditProductPostFragment_profile"
+            app:destination="@id/editProductPostFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            />
     </fragment>
 
     <fragment
@@ -19,15 +25,21 @@
         android:label="@string/title_new_post"
         tools:layout="@layout/fragment_new_product_post" >
         <action
-            android:id="@+id/action_navigation_return_to_profile"
-            app:destination="@id/navigation_profile" />
+            android:id="@+id/action_navigation_return_to_profile_new"
+            app:destination="@id/navigation_profile"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"/>
     </fragment>
 
     <fragment
         android:id="@+id/navigation_explore"
         android:name="com.example.curlycurl.ui.explore.ExploreFragment"
         android:label="@string/title_explore"
-        tools:layout="@layout/fragment_explore" />
+        tools:layout="@layout/fragment_explore" >
+        <action
+            android:id="@+id/navigateToEditProductPostFragment_explore"
+            app:destination="@id/editProductPostFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_community"
@@ -36,7 +48,9 @@
         tools:layout="@layout/fragment_community" >
         <action
             android:id="@+id/action_navigation_create_new_community_post"
-            app:destination="@id/navigation_new_community_post" />
+            app:destination="@id/navigation_new_community_post"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"/>
     </fragment>
 
     <fragment
@@ -46,7 +60,23 @@
         tools:layout="@layout/fragment_new_community_post" >
         <action
             android:id="@+id/action_navigation_return_to_community"
-            app:destination="@id/navigation_community" />
+            app:destination="@id/navigation_community"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"/>
+    </fragment>
+    <fragment
+        android:id="@+id/editProductPostFragment"
+        android:name="com.example.curlycurl.EditProductPostFragment"
+        android:label="fragment_edit_product_post"
+        tools:layout="@layout/fragment_edit_product_post" >
+        <action
+            android:id="@+id/action_navigation_return_to_profile_edit"
+            app:destination="@id/navigation_profile"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_editProductPostFragment_to_navigation_explore"
+            app:destination="@id/navigation_explore" />
     </fragment>
 
 

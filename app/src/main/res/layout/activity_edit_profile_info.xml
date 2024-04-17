@@ -23,7 +23,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminateOnly="true"/>
+        android:indeterminateOnly="true" />
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -40,7 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="text" />
+            android:inputType="text"
+            android:imeOptions="actionDone"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -53,9 +54,28 @@
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:hint="@string/email">
 
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editProfile_TXT_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:imeOptions="actionDone"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:hint="@string/city"
+        android:imeOptions="actionDone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editProfile_TXT_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -63,28 +83,23 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/editProfile_DATE_birthdate"
-        style="?android:spinnerStyle"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:layout_marginTop="6dp"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:backgroundTint="@android:color/transparent"
-        android:gravity="center_vertical|left"
-        android:text="@string/default_date"
-        android:textColor="@color/black" />
+        android:hint="@string/your_curls_type">
 
-    <Spinner
-        android:id="@+id/editProfile_spinner_city"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:spinnerMode="dialog" />
+        <AutoCompleteTextView
+            android:id="@+id/editProfile_DD_curlType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:paddingVertical="15dp"
+            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/editProfile_BTN_selectImage"
@@ -101,11 +116,11 @@
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        app:shapeAppearanceOverlay="@style/roundedImageView"
         android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/roundedImageView"
         app:strokeColor="@color/black"
         app:strokeWidth="1dp"
-        tools:src="@drawable/user_photo" />
+        android:src="@drawable/user_photo" />
 
 
     <com.google.android.material.button.MaterialButton

@@ -296,7 +296,7 @@ public class NewProductPostFragment extends Fragment {
 
     private void changeFragment(View v) {
         resetInputControls();
-        Navigation.findNavController(v).navigate(R.id.action_navigation_return_to_profile);
+        Navigation.findNavController(v).navigate(R.id.action_navigation_return_to_profile_new);
     }
 
     @Override

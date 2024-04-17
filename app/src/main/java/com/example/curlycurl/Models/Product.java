@@ -2,9 +2,10 @@ package com.example.curlycurl.Models;
 
 import com.google.firebase.Timestamp;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Product {
+public class Product implements Serializable {
     public enum ProductCondition {
         NEW,
         USED
@@ -17,7 +18,8 @@ public class Product {
         GEL,
         GLAZE,
         MOUSSE,
-        MASK
+        MASK,
+        OTHER
 
     }
 
@@ -29,9 +31,10 @@ public class Product {
     private String description;
     private String city;
     private String imageURL;
-    private String OwnerUID;
+    private String ownerUID;
     private String userName;
     private Timestamp created = new Timestamp(new Date());
+    private Timestamp modified = new Timestamp(new Date());
 
     public Product() {
     }
@@ -100,11 +103,11 @@ public class Product {
     }
 
     public String getOwnerUID() {
-        return OwnerUID;
+        return ownerUID;
     }
 
     public Product setOwnerUID(String ownerUID) {
-        OwnerUID = ownerUID;
+        this.ownerUID = ownerUID;
         return this;
     }
 
@@ -124,5 +127,24 @@ public class Product {
     public Product setUserName(String userName) {
         this.userName = userName;
         return this;
+    }
+
+    public Timestamp getModified() {
+        return modified;
+    }
+
+    public Product setModified(Timestamp modified) {
+        this.modified = modified;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId='" + productId + '\'' +
+                ", productName='" + productName + '\'' +
+                ", OwnerUID='" + ownerUID + '\'' +
+                ", userName='" + userName +
+                '}';
     }
 }

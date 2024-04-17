@@ -3,6 +3,7 @@ package com.example.curlycurl;
 import com.example.curlycurl.Models.CommunityPost;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.Models.User;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -11,6 +12,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,9 +33,9 @@ public class FirebaseManager {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         if (mUser != null) {
-            refUsersCollection = db.collection("users");
-            refUser = db.collection("users").document(mUser.getUid());
-            refProductsCollection = db.collection("products");
+            refUsersCollection = db.collection("Users");
+            refUser = db.collection("Users").document(mUser.getUid());
+            refProductsCollection = db.collection("Products");
             refCommunityPostsCollection = db.collection("CommunityPosts");
         }
     }
@@ -65,7 +67,7 @@ public class FirebaseManager {
     }
 
     public DocumentReference getRefUser(String userId) {
-        return db.collection("users").document(userId);
+        return refUsersCollection.document(userId);
     }
 
     public void createUsersProfileInDB(FirebaseUser user) {
@@ -75,11 +77,12 @@ public class FirebaseManager {
                 .setEmail(user.getEmail())
                 .setUserId(user.getUid());
 
-        db.collection("users").document(user.getUid()).set(connectedUser);
+        refUsersCollection.document(user.getUid()).set(connectedUser);
     }
 
     public void updateUserProfile(User user) {
-        DocumentReference ref = db.collection("users").document(user.getUserId());
+        //DocumentReference ref = refUsersCollection.document(user.getUserId());
+        DocumentReference ref = refUsersCollection.document(user.getUserId());
         ref.update(
                 "username",
                 user.getUsername(),
@@ -111,19 +114,41 @@ public class FirebaseManager {
         refUser.update("all_products", FieldValue.arrayUnion(product.getProductId()));
     }
 
+    public void updateProductInDB(Product product) {
+        DocumentReference ref = refProductsCollection.document(product.getProductId());
+        ref.update(
+                "productName",
+                product.getProductName(),
+                "productType",
+                product.getProductType(),
+                "condition",
+                product.getCondition(),
+                "description",
+                product.getDescription(),
+                "imageURL",
+                product.getImageURL(),
+                "city",
+                product.getCity(),
+                "modified",
+                new Timestamp(new Date())
+        );
+
+    }
+
 
     public void createNewCommunityPostInDB(CommunityPost post) {
         Map<String, Object> docCommunityPost = new HashMap<>();
-        docCommunityPost.put("authorUID",post.getAuthorUID());
-        docCommunityPost.put("userName",post.getUserName());
-        docCommunityPost.put("created",post.getCreated());
-        docCommunityPost.put("city",post.getCity());
-        docCommunityPost.put("imageURL",post.getImageURL());
-        docCommunityPost.put("post",post.getPost());
-        docCommunityPost.put("postId",post.getPostId());
+        docCommunityPost.put("authorUID", post.getAuthorUID());
+        docCommunityPost.put("userName", post.getUserName());
+        docCommunityPost.put("created", post.getCreated());
+        docCommunityPost.put("city", post.getCity());
+        docCommunityPost.put("imageURL", post.getImageURL());
+        docCommunityPost.put("post", post.getPost());
+        docCommunityPost.put("postId", post.getPostId());
         refCommunityPostsCollection.document(post.getPostId()).set(docCommunityPost);
         //refCommunityPostsCollection.document(post.getPostId()).set(post);
     }
+
 
     public CollectionReference getRefCommunityPostsCollection() {
         return refCommunityPostsCollection;
@@ -132,8 +157,6 @@ public class FirebaseManager {
     public Query usersProduct() {
         return refProductsCollection.whereEqualTo("ownerUID", mUser.getUid()).orderBy("created", Query.Direction.DESCENDING);
     }
-
-
 
 
     public void signOut() {

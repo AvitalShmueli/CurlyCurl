@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.example.curlycurl.Adapters.MyProductRecyclerViewAdapter;
 import com.example.curlycurl.FirebaseManager;
+import com.example.curlycurl.Interfaces.Callback_ProductPostSelected;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.Models.User;
 import com.example.curlycurl.R;
@@ -34,7 +35,7 @@ import java.util.List;
 /**
  * A fragment representing a list of Items.
  */
-public class ProductFragment extends Fragment {
+public class ProductFragment extends Fragment{
     private static final String ARG_COLUMN_COUNT = "column-count";
 
     public enum ProductsFragmentMode {
@@ -50,6 +51,7 @@ public class ProductFragment extends Fragment {
     private List<Product> productList;
     private MyProductRecyclerViewAdapter myAdapter;
     private ProductsFragmentMode mode;
+    private Callback_ProductPostSelected callbackProductPostSelected;
 
     public ProductFragment(ProductsFragmentMode mode) {
         this.mode = mode;
@@ -86,6 +88,8 @@ public class ProductFragment extends Fragment {
 
         productList = new ArrayList<>();
         myAdapter = new MyProductRecyclerViewAdapter(getContext(), productList);
+        myAdapter.setCallbackProductPostSelected(callbackProductPostSelected);
+
 
         EventChangeListener();
 
@@ -104,6 +108,10 @@ public class ProductFragment extends Fragment {
         ;
 
         return view;
+    }
+
+    public void setCallbackProductPostSelected(Callback_ProductPostSelected callbackProductPostSelected) {
+        this.callbackProductPostSelected = callbackProductPostSelected;
     }
 
     private void EventChangeListener() {

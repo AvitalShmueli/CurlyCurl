@@ -10,16 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 
 import com.example.curlycurl.Models.User;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,20 +39,22 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 
 public class EditProfileInfoActivity extends AppCompatActivity {
-    private TextInputEditText editProfile_TXT_userName;
-    private TextInputEditText editProfile_TXT_email;
+    private TextInputEditText editProfile_TXT_userName, editProfile_TXT_email, editProfile_TXT_city;
     private ShapeableImageView editProfile_IMG_ImageView;
-    private MaterialButton editProfile_BTN_selectImage;
-    private MaterialButton editProfile_BTN_save;
+    private MaterialButton editProfile_BTN_selectImage, editProfile_BTN_save;
+    private AutoCompleteTextView editProfile_DD_curlType;
     private FirebaseManager firebaseManager;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseStorage storage;
     private Uri imageUri;
+    private ArrayList<String> itemsCurlType;
+    private User.CurlType selectedCurlType = null;
 
     private ProgressBar editProfile_progressBar;
     ActivityResultLauncher<Intent> resultLauncher;
@@ -62,23 +69,48 @@ public class EditProfileInfoActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
 
         findViews();
+        initDropDownValues();
         initViews();
 
     }
 
-    private void findViews() {
+    private void initDropDownValues() {
+        itemsCurlType = new ArrayList<>();
+        for (User.CurlType curlType : User.CurlType.values()) {
+            itemsCurlType.add(curlType.name().substring(1)); // remove the _ in display
+        }
+        Log.d(TAG, "dropdown items (curl type) = " + itemsCurlType.toString());
+    }
 
+    private void findViews() {
         editProfile_TXT_userName = findViewById(R.id.editProfile_TXT_userName);
         editProfile_TXT_email = findViewById(R.id.editProfile_TXT_email);
+        editProfile_TXT_city = findViewById(R.id.editProfile_TXT_city);
+        editProfile_DD_curlType = findViewById(R.id.editProfile_DD_curlType);
         editProfile_IMG_ImageView = findViewById(R.id.editProfile_IMG_ImageView);
         editProfile_BTN_selectImage = findViewById(R.id.editProfile_BTN_selectImage);
         editProfile_BTN_save = findViewById(R.id.editProfile_BTN_save);
         editProfile_progressBar = findViewById(R.id.editProfile_progressBar);
-
     }
 
     private void initViews() {
-        editProfile_progressBar.setVisibility(View.GONE);
+        editProfile_progressBar.setVisibility(View.VISIBLE);
+        editProfile_TXT_userName.addTextChangedListener(postWatcher);
+        editProfile_TXT_email.addTextChangedListener(postWatcher);
+        editProfile_TXT_city.addTextChangedListener(postWatcher);
+
+        editProfile_TXT_userName.setOnFocusChangeListener(focusChangeListener);
+        editProfile_TXT_email.setOnFocusChangeListener(focusChangeListener);
+        editProfile_TXT_city.setOnFocusChangeListener(focusChangeListener);
+
+        ArrayAdapter<String> adapterItems_curlType = new ArrayAdapter<>(this, R.layout.dropdown_item, itemsCurlType);
+        editProfile_DD_curlType.setAdapter(adapterItems_curlType);
+        editProfile_DD_curlType.setOnItemClickListener((adapterView, view, position, id) -> {
+            String item = "_"+adapterView.getItemAtPosition(position).toString();
+            selectedCurlType = User.CurlType.valueOf(item);
+        });
+
+
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         if (mUser != null) {
@@ -90,20 +122,22 @@ public class EditProfileInfoActivity extends AppCompatActivity {
                 pickImage();
             });
             editProfile_BTN_save.setOnClickListener(v -> updateProfile());
-
         }
+        editProfile_progressBar.setVisibility(View.GONE);
     }
 
     private void updateProfile() {
         String strUsername = String.valueOf(editProfile_TXT_userName.getEditableText());
         String strEmail = String.valueOf(editProfile_TXT_email.getEditableText());
+        String strCity =  String.valueOf(editProfile_TXT_city.getEditableText());
+
         //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         User user = new User()
                 .setUserId(mUser.getUid())
                 .setUsername(strUsername)
                 .setEmail(strEmail)
-                .setCity("Ramat-Gan")
-                .setCurlType(User.CurlType._3A);
+                .setCity(strCity)
+                .setCurlType(selectedCurlType);
         if (imageUri != null) {
             uploadToFirebase(imageUri, user);
         } else {
@@ -113,7 +147,7 @@ public class EditProfileInfoActivity extends AppCompatActivity {
     }
 
     private void uploadToFirebase(Uri uri, User user) {
-        StorageReference fileRef = storage.getReference().child("profile_images").child( user.getUserId() + "." + getFileExtension(uri));
+        StorageReference fileRef = storage.getReference().child("profile_images").child(user.getUserId() + "." + getFileExtension(uri));
         fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -156,7 +190,7 @@ public class EditProfileInfoActivity extends AppCompatActivity {
         finish();
     }
 
-    private void registerResult(){
+    private void registerResult() {
         resultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -167,8 +201,8 @@ public class EditProfileInfoActivity extends AppCompatActivity {
                             editProfile_IMG_ImageView.setImageURI(imageUri);
                             editProfile_BTN_selectImage.setText(R.string.change_picture);
 
-                        }catch (Exception e){
-                            Toast.makeText(EditProfileInfoActivity.this,"No Image Selected",Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(EditProfileInfoActivity.this, "No Image Selected", Toast.LENGTH_SHORT).show();
                             editProfile_IMG_ImageView.setImageURI(null);
                         }
                     }
@@ -184,6 +218,7 @@ public class EditProfileInfoActivity extends AppCompatActivity {
             resultLauncher.launch(intent);
         }
     }
+
     private void clearImage() {
         editProfile_IMG_ImageView.setImageURI(null);
     }
@@ -191,6 +226,34 @@ public class EditProfileInfoActivity extends AppCompatActivity {
     private void toast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
+
+    TextWatcher postWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String strUsername = editProfile_TXT_userName.getEditableText().toString();
+            String strEmail = editProfile_TXT_email.getEditableText().toString();
+
+            editProfile_BTN_save.setEnabled(!strUsername.isEmpty() && !strEmail.isEmpty());
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+
+        }
+    };
+    View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    };
 
     @Override
     protected void onStop() {
