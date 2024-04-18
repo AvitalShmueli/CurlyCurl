@@ -85,7 +85,7 @@
                 android:maxLines="6"
                 android:minLines="1"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_small"
                 android:textStyle="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

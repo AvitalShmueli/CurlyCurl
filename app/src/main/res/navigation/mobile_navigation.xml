@@ -39,6 +39,9 @@
         <action
             android:id="@+id/navigateToEditProductPostFragment_explore"
             app:destination="@id/editProductPostFragment" />
+        <action
+            android:id="@+id/navigateToEditCommunityPostFragment_explore"
+            app:destination="@id/editCommunityPostFragment" />
     </fragment>
 
     <fragment
@@ -51,6 +54,9 @@
             app:destination="@id/navigation_new_community_post"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"/>
+        <action
+            android:id="@+id/navigateToEditCommunityPostFragment_community"
+            app:destination="@id/editCommunityPostFragment" />
     </fragment>
 
     <fragment
@@ -76,6 +82,17 @@
             app:exitAnim="@android:anim/slide_out_right"/>
         <action
             android:id="@+id/action_editProductPostFragment_to_navigation_explore"
+            app:destination="@id/navigation_explore" />
+    </fragment>
+    <fragment
+        android:id="@+id/editCommunityPostFragment"
+        android:name="com.example.curlycurl.ui.new_community_post.EditCommunityPostFragment"
+        android:label="EditCommunityPostFragment" >
+        <action
+            android:id="@+id/action_editCommunityPostFragment_to_navigation_community"
+            app:destination="@id/navigation_community" />
+        <action
+            android:id="@+id/action_editCommunityPostFragment_to_navigation_explore"
             app:destination="@id/navigation_explore" />
     </fragment>
 

@@ -40,8 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="text"
-            android:imeOptions="actionDone"/>
+            android:imeOptions="actionDone"
+            android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,8 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="text"
-            android:imeOptions="actionDone"/>
+            android:imeOptions="actionDone"
+            android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,23 +83,41 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="6dp"
-        android:hint="@string/your_curls_type">
+        android:orientation="horizontal">
 
-        <AutoCompleteTextView
-            android:id="@+id/editProfile_DD_curlType"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:paddingVertical="15dp"
-            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="6dp"
+            android:layout_weight="1"
+            android:hint="@string/your_curls_type">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <AutoCompleteTextView
+                android:id="@+id/editProfile_DD_curlType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:paddingVertical="15dp"
+                tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/editProfile_IMG_tooltip"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:clickable="true"
+            android:padding="3dp"
+            android:src="@drawable/baseline_help_outline_24"
+            android:tint="@color/light_purple" />
+    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/editProfile_BTN_selectImage"
@@ -117,10 +135,10 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
+        android:src="@drawable/user_photo"
         app:shapeAppearanceOverlay="@style/roundedImageView"
         app:strokeColor="@color/black"
-        app:strokeWidth="1dp"
-        android:src="@drawable/user_photo" />
+        app:strokeWidth="1dp" />
 
 
     <com.google.android.material.button.MaterialButton
@@ -130,7 +148,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:layout_marginTop="30dp"
-        android:backgroundTint="@color/dark_purple"
+
         android:text="@string/save"
         android:textSize="@dimen/buttons_text_size_big" />
 

@@ -97,19 +97,11 @@ public class FirebaseManager {
         );
     }
 
-    public boolean isUserConnected() {
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
-        return mUser != null;
-    }
-
     public CollectionReference getRefProductsCollection() {
         return refProductsCollection;
     }
 
     public void createNewProductInDB(Product product) {
-        //Log.d(TAG, "owner uuid: " + mUser.getUid() + " | " + product.getOwnerUID());
-        //DocumentReference ref = db.collection("users").document(mUser.getUid());
         refProductsCollection.document(product.getProductId()).set(product);
         refUser.update("all_products", FieldValue.arrayUnion(product.getProductId()));
     }
@@ -146,7 +138,6 @@ public class FirebaseManager {
         docCommunityPost.put("post", post.getPost());
         docCommunityPost.put("postId", post.getPostId());
         refCommunityPostsCollection.document(post.getPostId()).set(docCommunityPost);
-        //refCommunityPostsCollection.document(post.getPostId()).set(post);
     }
 
 

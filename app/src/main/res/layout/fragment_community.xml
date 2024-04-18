@@ -19,7 +19,7 @@
         android:text="@string/community" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/productPost_BTN_post"
+        android:id="@+id/productPost_BTN_writePost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"

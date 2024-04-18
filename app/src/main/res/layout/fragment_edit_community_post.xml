@@ -15,7 +15,7 @@
         android:background="@color/light_purple">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/communityPost_IMG_back"
+            android:id="@+id/editCommunityPost_IMG_back"
             android:layout_width="@dimen/header_height"
             android:layout_height="match_parent"
             android:paddingHorizontal="10dp"
@@ -23,13 +23,14 @@
             android:tint="@color/dark_purple" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/communityPost_LBL_title"
+            android:id="@+id/editCommunityPost_LBL_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="-3dp"
             android:layout_marginEnd="@dimen/header_height"
-            android:layout_toRightOf="@id/communityPost_IMG_back"
+            android:layout_toRightOf="@id/editCommunityPost_IMG_back"
             android:gravity="center"
-            android:text="@string/new_post"
+            android:text="@string/edit_post"
             android:textColor="@color/dark_purple"
             android:textSize="@dimen/title_text_size"
             android:textStyle="bold" />
@@ -38,7 +39,7 @@
     </RelativeLayout>
 
     <ProgressBar
-        android:id="@+id/communityPost_progressBar"
+        android:id="@+id/editCommunityPost_progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,9 +64,8 @@
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:hint="@string/write_post">
 
-
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/communityPost_TXT_post"
+                    android:id="@+id/editCommunityPost_TXT_post"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:ems="10"
@@ -87,7 +87,7 @@
                 android:layout_marginTop="16dp">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/communityPost_BTN_addTags"
+                    android:id="@+id/editCommunityPost_BTN_addTags"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@android:color/transparent"
@@ -104,7 +104,7 @@
             </RelativeLayout>
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/communityPost_IMG_ImageView"
+                android:id="@+id/editCommunityPost_IMG_ImageView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_gravity="center_horizontal"
@@ -113,6 +113,7 @@
                 android:scaleType="fitCenter" />
 
             <LinearLayout
+                android:id="@+id/editCommunityPost_CONTAINER_imageActions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
@@ -121,7 +122,7 @@
 
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/communityPost_BTN_selectImage"
+                    android:id="@+id/editCommunityPost_BTN_selectImage"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="0dp"
@@ -138,7 +139,7 @@
                     app:iconTint="@color/dark_purple" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/communityPost_BTN_removeImage"
+                    android:id="@+id/editCommunityPost_BTN_removeImage"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="0dp"
@@ -166,7 +167,7 @@
 
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/communityPost_BTN_addLocation"
+                    android:id="@+id/editCommunityPost_BTN_addLocation"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@android:color/transparent"
@@ -183,7 +184,7 @@
             </RelativeLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/communityPost_BTN_post"
+                android:id="@+id/editCommunityPost_BTN_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

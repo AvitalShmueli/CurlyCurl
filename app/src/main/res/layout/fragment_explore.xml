@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     tools:context=".ui.explore.ExploreFragment">
 
@@ -29,10 +31,10 @@
             android:layout_alignTop="@id/explore_LBL_title"
             android:layout_alignEnd="@id/explore_LBL_title"
             android:layout_marginEnd="15dp"
+            android:clickable="true"
             android:scaleType="fitCenter"
             android:src="@drawable/map"
-            android:tint="@color/dark_purple"
-            android:clickable="true"/>
+            android:tint="@color/dark_purple" />
 
     </RelativeLayout>
 
@@ -44,21 +46,25 @@
             android:id="@+id/explore_text_layout_search"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/searchbox_height"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="6dp"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin">
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:hint="@string/search"
+            app:endIconMode="clear_text">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/explore_TXT_search"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/searchbox_height"
                 android:ems="10"
-                android:hint="@string/search"
+                android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:paddingEnd="30dp" />
+                android:paddingVertical="15dp"
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/explore_IMG_search"
@@ -66,10 +72,12 @@
             android:layout_height="@dimen/searchbox_height"
             android:layout_alignTop="@id/explore_text_layout_search"
             android:layout_alignEnd="@id/explore_text_layout_search"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/baseline_search_24"
             android:tint="@color/dark_purple" />
+
 
     </RelativeLayout>
 
@@ -106,6 +114,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginBottom="?attr/actionBarSize"/>
+        android:layout_marginBottom="?attr/actionBarSize" />
 
 </LinearLayout>

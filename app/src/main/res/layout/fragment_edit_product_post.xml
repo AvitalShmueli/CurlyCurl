@@ -70,11 +70,13 @@
                     android:ems="10"
                     android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:paddingVertical="15dp" />
+                    android:paddingVertical="15dp"
+                    android:textColor="?attr/colorControlNormal" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editProductPost_DD_layout_productType"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,11 +90,13 @@
                     android:layout_height="wrap_content"
                     android:inputType="none"
                     android:paddingVertical="15dp"
+                    android:textColor="?attr/colorControlNormal"
                     tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editProductPost_DD_layout_productCondition"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -106,6 +110,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="none"
                     android:paddingVertical="15dp"
+                    android:textColor="?attr/colorControlNormal"
                     tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -133,33 +138,29 @@
                     android:paddingVertical="10dp"
                     android:scrollbarStyle="insideInset"
                     android:scrollbars="vertical"
-                    android:scrollHorizontally="false" />
+                    android:scrollHorizontally="false"
+                    android:textColor="?attr/colorControlNormal" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <RelativeLayout
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/editProductPost_BTN_addTags"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/control_height"
+                android:layout_height="50dp"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="6dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/editProductPost_BTN_addTags"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@android:color/transparent"
-                    android:fontFamily="sans-serif"
-                    android:gravity="left|center_vertical"
-                    android:paddingLeft="0dp"
-                    android:text="@string/add_tags"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorControlNormal"
-                    android:textSize="@dimen/buttons_text_size_small"
-                    android:textStyle="bold"
-                    app:icon="@drawable/baseline_tag_24"
-                    app:iconTint="@color/dark_purple" />
-
-            </RelativeLayout>
+                android:layout_marginTop="6dp"
+                android:background="@android:color/transparent"
+                android:fontFamily="sans-serif"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="0dp"
+                android:text="@string/add_tags"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorControlNormal"
+                android:textSize="@dimen/buttons_text_size_small"
+                android:textStyle="bold"
+                app:icon="@drawable/baseline_tag_24"
+                app:iconTint="@color/dark_purple" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/editProductPost_IMG_ImageView"
@@ -171,6 +172,7 @@
                 android:scaleType="fitCenter" />
 
             <LinearLayout
+                android:id="@+id/editProductPost_CONTAINER_imageActions"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/control_height"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
@@ -216,28 +218,37 @@
             </LinearLayout>
 
 
-            <RelativeLayout
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/editProductPost_BTN_addLocation"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/control_height"
+                android:layout_height="50dp"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="6dp">
+                android:layout_marginTop="6dp"
+                android:background="@android:color/transparent"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="0dp"
+                android:text="@string/add_location"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorControlNormal"
+                android:textSize="@dimen/buttons_text_size_small"
+                android:textStyle="bold"
+                app:icon="@drawable/baseline_location_on_24"
+                app:iconTint="@color/dark_purple" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/editProductPost_BTN_addLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@android:color/transparent"
-                    android:gravity="left|center_vertical"
-                    android:paddingLeft="0dp"
-                    android:text="@string/add_location"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorControlNormal"
-                    android:textSize="@dimen/buttons_text_size_small"
-                    android:textStyle="bold"
-                    app:icon="@drawable/baseline_location_on_24"
-                    app:iconTint="@color/dark_purple" />
 
-            </RelativeLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/editProductPost_LBL_ownerEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="10dp"
+                android:text="✉️    owner"
+                android:textColor="?attr/colorControlNormal"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/editProductPost_BTN_post"
@@ -251,7 +262,6 @@
                 android:enabled="false"
                 android:text="@string/save_changes"
                 android:textSize="@dimen/new_product_text_size" />
-
 
         </LinearLayout>
 

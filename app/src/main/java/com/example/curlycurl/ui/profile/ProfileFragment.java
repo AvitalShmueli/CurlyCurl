@@ -32,6 +32,8 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.Objects;
+
 
 public class ProfileFragment extends Fragment {
 
@@ -112,10 +114,20 @@ public class ProfileFragment extends Fragment {
     }
 
     private void navigateToEditProductPostFragment(Product product){
-        Log.d(TAG,"putSerializable | "+product.getProductName()+" "+product.getOwnerUID());
         Bundle args = new Bundle();
-        args.putSerializable("key",product);
-        Navigation.findNavController(getView()).navigate(R.id.navigateToEditProductPostFragment_profile,args);
+        //args.putSerializable("key",product);
+        args.putString("product_id", product.getProductId());
+        args.putString("product_name", product.getProductName());
+        args.putString("product_description", product.getDescription());
+        args.putString("product_type", product.getProductType().toString());
+        args.putString("product_condition", product.getCondition().toString());
+        args.putString("product_city", product.getCity());
+        args.putString("imageURL", product.getImageURL());
+        args.putString("ownerUID", product.getOwnerUID());
+        args.putString("userName", product.getUserName());
+        args.putString("ownerEmail", product.getOwnerEmail());
+        args.putString("frag","profile");
+        Navigation.findNavController(requireView()).navigate(R.id.navigateToEditProductPostFragment_profile,args);
 
     }
 

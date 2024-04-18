@@ -17,15 +17,11 @@
     <string name="post_in_marketplace">Post in marketplace</string>
     <string name="write_a_new_post">Write a new post</string>
     <string name="community">Community</string>
-    <string name="post">POST</string>
+    <string name="post">Post</string>
     <string name="new_product">New Product</string>
     <string name="explore">Explore</string>
     <string name="search">Search</string>
     <string name="marketplace">Marketplace</string>
-
-    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
-    <string name="facebook_application_id" translatable="false">YOUR_APP_ID</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fbYOUR_APP_ID</string>
     <string name="sign_out">Sign out</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="user_name">User Name</string>
@@ -40,8 +36,15 @@
     <string name="product_type">Product Type</string>
     <string name="product_condition">Product Condition</string>
     <string name="edit_product">Edit Product</string>
+    <string name="product_details">Product Details</string>
     <string name="save_changes">Save Changes</string>
     <string name="city">City</string>
     <string name="your_curls_type">Your curls type</string>
+    <string name="edit_post">Edit Post</string>
+
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">YOUR_APP_ID</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fbYOUR_APP_ID</string>
+
 
 </resources>

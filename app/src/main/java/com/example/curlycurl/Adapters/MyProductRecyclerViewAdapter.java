@@ -11,17 +11,12 @@ import com.bumptech.glide.Glide;
 import com.example.curlycurl.Interfaces.Callback_ProductPostSelected;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.R;
-import com.example.curlycurl.placeholder.PlaceholderContent.PlaceholderItem;
 import com.example.curlycurl.databinding.FragmentProductBinding;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProductRecyclerViewAdapter.ViewHolder> {
 
     private final List<Product> productList;
@@ -36,9 +31,8 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
 
     }
 
-    public MyProductRecyclerViewAdapter setCallbackProductPostSelected(Callback_ProductPostSelected callbackProductPostSelected) {
+    public void setCallbackProductPostSelected(Callback_ProductPostSelected callbackProductPostSelected) {
         this.callbackProductPostSelected = callbackProductPostSelected;
-        return this;
     }
 
     @Override

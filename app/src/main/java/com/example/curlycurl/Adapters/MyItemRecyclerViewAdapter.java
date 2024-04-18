@@ -1,42 +1,39 @@
 package com.example.curlycurl.Adapters;
 
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
-import com.example.curlycurl.FirebaseManager;
+import com.example.curlycurl.Interfaces.Callback_CommunityPostSelected;
 import com.example.curlycurl.Models.CommunityPost;
-import com.example.curlycurl.Models.User;
 import com.example.curlycurl.R;
 import com.example.curlycurl.databinding.FragmentCommunityPostBinding;
-import com.example.curlycurl.placeholder.PlaceholderContent.PlaceholderItem;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
-
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
- */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<CommunityPost> communityPostList;
     private Context context;
-    private FirebaseManager firebaseManager;
-    private User connectedUser;
+    private Callback_CommunityPostSelected callbackCommunityPostSelected;
 
 
     public MyItemRecyclerViewAdapter(Context context, List<CommunityPost> items) {
         this.context = context;
         communityPostList = items;
+    }
+
+    public void setCallbackCommunityPostSelected(Callback_CommunityPostSelected callbackCommunityPostSelected) {
+        this.callbackCommunityPostSelected = callbackCommunityPostSelected;
     }
 
     @Override
@@ -49,8 +46,6 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = communityPostList.get(position);
-        //holder.mIdView.setText(mValues.get(position).id);
-
         holder.community_LBL_author.setText(holder.mItem.getUserName());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         holder.community_LBL_created.setText(dateFormat.format(holder.mItem.getCreated().toDate()));
@@ -75,6 +70,16 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                 holder.community_LBL_post.setMaxLines(CommunityPost.MAX_LINES_COLLAPSED);
             holder.mItem.setCollapsed(!holder.mItem.isCollapsed());
         });
+
+        View.OnLongClickListener listener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(callbackCommunityPostSelected != null)
+                    callbackCommunityPostSelected.onCommunityPostSelected(holder.mItem);
+                return true;
+            }
+        };
+        holder.community_CARD_data.setOnLongClickListener(listener);
     }
 
     @Override

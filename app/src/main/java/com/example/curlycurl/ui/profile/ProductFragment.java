@@ -1,6 +1,8 @@
 package com.example.curlycurl.ui.profile;
 
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -19,11 +21,11 @@ import com.example.curlycurl.Adapters.MyProductRecyclerViewAdapter;
 import com.example.curlycurl.FirebaseManager;
 import com.example.curlycurl.Interfaces.Callback_ProductPostSelected;
 import com.example.curlycurl.Models.Product;
-import com.example.curlycurl.Models.User;
 import com.example.curlycurl.R;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.curlycurl.Utilities.SignalManager;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -35,7 +37,7 @@ import java.util.List;
 /**
  * A fragment representing a list of Items.
  */
-public class ProductFragment extends Fragment{
+public class ProductFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
 
     public enum ProductsFragmentMode {
@@ -46,18 +48,19 @@ public class ProductFragment extends Fragment{
     private int mColumnCount = 2;
 
     private FirebaseManager firebaseManager;
-    private FirebaseUser mUser;
-    private User connectedUser;
     private List<Product> productList;
     private MyProductRecyclerViewAdapter myAdapter;
     private ProductsFragmentMode mode;
     private Callback_ProductPostSelected callbackProductPostSelected;
+    private String searchTerm = "";
 
+
+
+    public ProductFragment() {
+        this.mode = ProductsFragmentMode.USER;
+    }
     public ProductFragment(ProductsFragmentMode mode) {
         this.mode = mode;
-    }
-    public ProductFragment( ) {
-        this.mode = ProductsFragmentMode.USER;
     }
 
 
@@ -72,7 +75,6 @@ public class ProductFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -84,7 +86,6 @@ public class ProductFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_product_list, container, false);
 
         firebaseManager = FirebaseManager.getInstance();
-        //mUser = firebaseManager.getmUser();
 
         productList = new ArrayList<>();
         myAdapter = new MyProductRecyclerViewAdapter(getContext(), productList);
@@ -105,7 +106,7 @@ public class ProductFragment extends Fragment{
             //recyclerView.setAdapter(new MyProductRecyclerViewAdapter(PlaceholderContent.ITEMS));
             recyclerView.setAdapter(myAdapter);
         }
-        ;
+
 
         return view;
     }
@@ -114,49 +115,88 @@ public class ProductFragment extends Fragment{
         this.callbackProductPostSelected = callbackProductPostSelected;
     }
 
-    private void EventChangeListener() {
-        if (mode == ProductsFragmentMode.USER) {
-            //refProductsCollection.whereEqualTo("ownerUID", connectedUser.getUserId());
-            /*firebaseManager.getRefProductsCollection()
-                    .whereEqualTo("ownerUID", mUser.getUid())
-                    .orderBy("created", Query.Direction.DESCENDING)*/
-            firebaseManager.usersProduct().addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                Log.e("Firestore error", error.getMessage());
-                                return;
-                            }
-
-                            for (DocumentChange dc : value.getDocumentChanges()) {
-                                if (dc.getType() == DocumentChange.Type.ADDED) {
-                                    productList.add(dc.getDocument().toObject(Product.class));
-                                }
-                                myAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    });
-        } else {
-            firebaseManager.getRefProductsCollection()
-                    .orderBy("created", Query.Direction.DESCENDING)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                Log.e("Firestore error", error.getMessage());
-                                return;
-                            }
-
-                            for (DocumentChange dc : value.getDocumentChanges()) {
-                                if (dc.getType() == DocumentChange.Type.ADDED) {
-                                    productList.add((dc.getDocument().toObject(Product.class)));
-                                }
-                                myAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    });
-        }
+    public void setSearchTerm(String searchTerm) {
+        this.searchTerm = searchTerm;
+        Log.d(TAG, "Search term has changed: " + searchTerm);
+        EventChangeListener();
     }
 
+    private void EventChangeListener() {
+        productList.clear();
+        if (mode == ProductsFragmentMode.USER) {
+            firebaseManager.usersProduct().addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if (error != null) {
+                        Log.e("Firestore error", error.getMessage());
+                        return;
+                    }
+
+                    for (DocumentChange dc : value.getDocumentChanges()) {
+                        if (dc.getType() == DocumentChange.Type.ADDED) {
+                            productList.add(dc.getDocument().toObject(Product.class));
+                        }
+                        myAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        } else {
+            if (!searchTerm.isEmpty()) {
+                Query query = firebaseManager.getRefProductsCollection().where(
+                        Filter.or(
+                                Filter.and(
+                                        Filter.greaterThanOrEqualTo("productName", searchTerm),
+                                        Filter.lessThan("productName", searchTerm + 'z')
+                                ),
+                                Filter.equalTo("productType",searchTerm.toUpperCase()),
+                                Filter.and(
+                                        Filter.greaterThanOrEqualTo("userName", searchTerm),
+                                        Filter.lessThan("userName", searchTerm + 'z')
+                                )
+                        )
+                ).orderBy("created", Query.Direction.DESCENDING);
+                query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            Log.e("Firestore error", error.getMessage());
+                            return;
+                        }
+                        if(value.getDocumentChanges().size()==0){
+                            SignalManager.getInstance().toast("No results");
+                            productList.clear();
+                            myAdapter.notifyDataSetChanged();
+                            return;
+                        }
+                        for (DocumentChange dc : value.getDocumentChanges()) {
+                            if (dc.getType() == DocumentChange.Type.ADDED) {
+                                productList.add((dc.getDocument().toObject(Product.class)));
+                            }
+                            myAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+            } else {
+                firebaseManager.getRefProductsCollection()
+                        .orderBy("created", Query.Direction.DESCENDING)
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                if (error != null) {
+                                    Log.e("Firestore error", error.getMessage());
+                                    return;
+                                }
+
+                                for (DocumentChange dc : value.getDocumentChanges()) {
+                                    if (dc.getType() == DocumentChange.Type.ADDED) {
+                                        productList.add((dc.getDocument().toObject(Product.class)));
+                                    }
+                                    myAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+            }
+        }
+    }
 
 }

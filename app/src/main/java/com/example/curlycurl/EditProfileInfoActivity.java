@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,8 +29,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.curlycurl.Models.User;
+import com.example.curlycurl.Utilities.SignalManager;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -39,6 +45,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -95,9 +102,9 @@ public class EditProfileInfoActivity extends AppCompatActivity {
 
     private void initViews() {
         editProfile_progressBar.setVisibility(View.VISIBLE);
-        editProfile_TXT_userName.addTextChangedListener(postWatcher);
-        editProfile_TXT_email.addTextChangedListener(postWatcher);
-        editProfile_TXT_city.addTextChangedListener(postWatcher);
+        editProfile_TXT_userName.addTextChangedListener(profileWatcher);
+        editProfile_TXT_email.addTextChangedListener(profileWatcher);
+        editProfile_TXT_city.addTextChangedListener(profileWatcher);
 
         editProfile_TXT_userName.setOnFocusChangeListener(focusChangeListener);
         editProfile_TXT_email.setOnFocusChangeListener(focusChangeListener);
@@ -130,8 +137,6 @@ public class EditProfileInfoActivity extends AppCompatActivity {
         String strUsername = String.valueOf(editProfile_TXT_userName.getEditableText());
         String strEmail = String.valueOf(editProfile_TXT_email.getEditableText());
         String strCity =  String.valueOf(editProfile_TXT_city.getEditableText());
-
-        //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         User user = new User()
                 .setUserId(mUser.getUid())
                 .setUsername(strUsername)
@@ -148,20 +153,43 @@ public class EditProfileInfoActivity extends AppCompatActivity {
 
     private void uploadToFirebase(Uri uri, User user) {
         StorageReference fileRef = storage.getReference().child("profile_images").child(user.getUserId() + "." + getFileExtension(uri));
-        fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        editProfile_IMG_ImageView.setDrawingCacheEnabled(true);
+        editProfile_IMG_ImageView.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) editProfile_IMG_ImageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = fileRef.putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
-                    public void onSuccess(Uri uri) {
-                        user.setImageURL(uri.toString());
-                        firebaseManager.updateUserProfile(user);
-                        toast("Uploaded successfully");
-                        editProfile_progressBar.setVisibility(View.GONE);
-                        changeActivity();
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        // Continue with the task to get the download URL
+                        return fileRef.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+                            user.setImageURL(downloadUri.toString());
+                            firebaseManager.updateUserProfile(user);
+                            SignalManager.getInstance().toast("Uploaded successfully");
+                            editProfile_progressBar.setVisibility(View.GONE);
+                            changeActivity();
+                        } else {
+                            // Handle failures
+                            SignalManager.getInstance().toast("Something went wrong");
+                            editProfile_progressBar.setVisibility(View.GONE);
+                            Log.e(TAG, "Something went wrong | " + uri);
+                        }
                     }
                 });
-
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -171,7 +199,7 @@ public class EditProfileInfoActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                toast("Uploading failed");
+                SignalManager.getInstance().toast("Uploading failed");
                 editProfile_progressBar.setVisibility(View.GONE);
                 Log.e(TAG, "Uploading failed | " + uri);
             }
@@ -182,12 +210,6 @@ public class EditProfileInfoActivity extends AppCompatActivity {
         ContentResolver cr = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cr.getType(uri));
-    }
-
-    private void changeActivity() {
-        Intent destination = new Intent(this, MainActivity.class);
-        startActivity(destination);
-        finish();
     }
 
     private void registerResult() {
@@ -214,20 +236,17 @@ public class EditProfileInfoActivity extends AppCompatActivity {
     private void pickImage() {
         Intent intent;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R && android.os.ext.SdkExtensions.getExtensionVersion(android.os.Build.VERSION_CODES.R) >= 2) {
-            intent = new Intent((MediaStore.ACTION_PICK_IMAGES));
+            intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             resultLauncher.launch(intent);
         }
     }
 
     private void clearImage() {
         editProfile_IMG_ImageView.setImageURI(null);
+        editProfile_BTN_selectImage.setText(R.string.add_a_picture);
     }
 
-    private void toast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    TextWatcher postWatcher = new TextWatcher() {
+    TextWatcher profileWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -254,6 +273,12 @@ public class EditProfileInfoActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     };
+
+    private void changeActivity() {
+        Intent destination = new Intent(this, MainActivity.class);
+        startActivity(destination);
+        finish();
+    }
 
     @Override
     protected void onStop() {
