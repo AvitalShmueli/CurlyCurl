@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.curlycurl.Utilities.FirebaseManager;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
@@ -72,8 +73,6 @@ public class LoginActivity extends AppCompatActivity {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
             // Successfully signed in
-            int x=1;
-            //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             user = mAuth.getCurrentUser();
             if (user != null) {
                 long creationTimestamp = Objects.requireNonNull(user.getMetadata()).getCreationTimestamp();

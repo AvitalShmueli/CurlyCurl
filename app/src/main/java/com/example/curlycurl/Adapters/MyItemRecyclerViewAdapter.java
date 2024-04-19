@@ -4,19 +4,24 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Space;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.curlycurl.Utilities.FirebaseManager;
 import com.example.curlycurl.Interfaces.Callback_CommunityPostSelected;
 import com.example.curlycurl.Models.CommunityPost;
 import com.example.curlycurl.R;
 import com.example.curlycurl.databinding.FragmentCommunityPostBinding;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,6 +50,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.currentUser = FirebaseManager.getInstance().getmAuth().getCurrentUser();
         holder.mItem = communityPostList.get(position);
         holder.community_LBL_author.setText(holder.mItem.getUserName());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
@@ -63,23 +69,47 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                     .into(holder.community_IMG_photo);
         }
 
-        holder.community_CARD_data.setOnClickListener(v -> {
-            if (holder.mItem.isCollapsed())
-                holder.community_LBL_post.setMaxLines(Integer.MAX_VALUE);
-            else
-                holder.community_LBL_post.setMaxLines(CommunityPost.MAX_LINES_COLLAPSED);
-            holder.mItem.setCollapsed(!holder.mItem.isCollapsed());
-        });
+        StringBuilder strTags = new StringBuilder();
+        ArrayList<String> arrTags = holder.mItem.getTags();
+        if(arrTags != null && arrTags.size() > 0){
+            for(String s : holder.mItem.getTags())
+                strTags.append("# ").append(s);
+            holder.community_LBL_tags.setText(strTags);
+            holder.community_LBL_tags.setVisibility(View.VISIBLE);
+        }else {
+            holder.community_LBL_tags.setText("");
+            holder.community_LBL_tags.setVisibility(View.GONE);
+        }
 
-        View.OnLongClickListener listener = new View.OnLongClickListener() {
+        View.OnClickListener expand_listener = new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                if(callbackCommunityPostSelected != null)
-                    callbackCommunityPostSelected.onCommunityPostSelected(holder.mItem);
-                return true;
+            public void onClick(View v) {
+                if (holder.mItem.isCollapsed())
+                    holder.community_LBL_post.setMaxLines(Integer.MAX_VALUE);
+                else
+                    holder.community_LBL_post.setMaxLines(CommunityPost.MAX_LINES_COLLAPSED);
+                holder.mItem.setCollapsed(!holder.mItem.isCollapsed());
             }
         };
-        holder.community_CARD_data.setOnLongClickListener(listener);
+        holder.community_IMG_photo.setOnClickListener(expand_listener);
+        holder.community_LBL_post.setOnClickListener(expand_listener);
+
+
+        if (holder.mItem.getAuthorUID().equals(holder.currentUser.getUid())) {
+            holder.community_BTN_edit.setOnClickListener(v -> {
+                if (callbackCommunityPostSelected != null)
+                    callbackCommunityPostSelected.onCommunityPostSelected_edit(holder.mItem);
+            });
+            holder.community_BTN_edit.setVisibility(View.VISIBLE);
+            holder.community_SPACE_actions.setVisibility(View.VISIBLE);
+        } else {
+            holder.community_BTN_edit.setVisibility(View.GONE);
+            holder.community_SPACE_actions.setVisibility(View.GONE);
+        }
+        holder.community_BTN_comment.setOnClickListener(v -> {
+            if (callbackCommunityPostSelected != null)
+                callbackCommunityPostSelected.onCommunityPostSelected_comment(holder.mItem);
+        });
     }
 
     @Override
@@ -89,19 +119,25 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         //public final TextView mIdView;
-        public final MaterialTextView community_LBL_post, community_LBL_author, community_LBL_created;
+        public final MaterialTextView community_LBL_post, community_LBL_author, community_LBL_created, community_LBL_tags;
         public final ShapeableImageView community_IMG_photo;
+        public final MaterialButton community_BTN_comment, community_BTN_edit;
+        public final Space community_SPACE_actions;
         public final CardView community_CARD_data;
         public CommunityPost mItem;
+        public FirebaseUser currentUser;
 
         public ViewHolder(FragmentCommunityPostBinding binding) {
             super(binding.getRoot());
-            //mIdView = binding.itemNumber;
             community_LBL_author = binding.communityLBLAuthor;
             community_LBL_created = binding.communityLBLCreated;
             community_LBL_post = binding.communityLBLPost;
             community_IMG_photo = binding.communityIMGPhoto;
             community_CARD_data = binding.communityCARDData;
+            community_BTN_comment = binding.communityBTNComment;
+            community_BTN_edit = binding.communityBTNEdit;
+            community_SPACE_actions = binding.communitySPACEActions;
+            community_LBL_tags = binding.communityLBLTags;
         }
 
         @Override

@@ -20,6 +20,7 @@ import com.example.curlycurl.Interfaces.Callback_CommunityPostSelected;
 import com.example.curlycurl.Models.CommunityPost;
 import com.example.curlycurl.R;
 import com.example.curlycurl.databinding.FragmentCommunityBinding;
+import com.example.curlycurl.ui.community_post.EditCommunityPostFragment;
 import com.google.android.material.button.MaterialButton;
 
 public class CommunityFragment extends Fragment {
@@ -36,9 +37,14 @@ public class CommunityFragment extends Fragment {
         CommunityPostsFragment childFragment = new CommunityPostsFragment();
         childFragment.setCallbackCommunityPostSelected(new Callback_CommunityPostSelected() {
             @Override
-            public void onCommunityPostSelected(CommunityPost post) {
+            public void onCommunityPostSelected_comment(CommunityPost post) {
                 Log.d(TAG,"onclick | " +post.getPostId() + " | "+post.getAuthorUID());
-                navigateToEditCommunityPostFragment(post);
+                navigateToEditCommunityPostFragment(post, EditCommunityPostFragment.PostMode.COMMENT);
+            }
+
+            @Override
+            public void onCommunityPostSelected_edit(CommunityPost post) {
+                navigateToEditCommunityPostFragment(post, EditCommunityPostFragment.PostMode.EDIT);
             }
         });
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -50,7 +56,7 @@ public class CommunityFragment extends Fragment {
         return root;
     }
 
-    private void navigateToEditCommunityPostFragment(CommunityPost post) {
+    private void navigateToEditCommunityPostFragment(CommunityPost post, EditCommunityPostFragment.PostMode mode) {
         Bundle args = new Bundle();
         args.putString("post_id", post.getPostId());
         args.putString("post_post", post.getPost());
@@ -58,7 +64,9 @@ public class CommunityFragment extends Fragment {
         args.putString("post_city", post.getCity());
         args.putString("imageURL", post.getImageURL());
         args.putString("userName", post.getUserName());
+        args.putStringArrayList("tags",post.getTags());
         args.putString("frag","community");
+        args.putString("mode", String.valueOf(mode));
         Navigation.findNavController(requireView()).navigate(R.id.navigateToEditCommunityPostFragment_community,args);
     }
 

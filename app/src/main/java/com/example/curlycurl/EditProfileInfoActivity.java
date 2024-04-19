@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.curlycurl.Models.User;
+import com.example.curlycurl.Utilities.FirebaseManager;
 import com.example.curlycurl.Utilities.SignalManager;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;

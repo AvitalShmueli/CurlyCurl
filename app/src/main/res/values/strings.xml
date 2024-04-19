@@ -14,6 +14,8 @@
     <string name="add_tags">Add tags</string>
     <string name="add_a_picture">Add a picture</string>
     <string name="add_location">Add location</string>
+    <string name="change_location">Change location</string>
+    <string name="location">Location</string>
     <string name="post_in_marketplace">Post in marketplace</string>
     <string name="write_a_new_post">Write a new post</string>
     <string name="community">Community</string>
@@ -45,6 +47,11 @@
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">YOUR_APP_ID</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fbYOUR_APP_ID</string>
+    <string name="edit">Edit</string>
+    <string name="comment">Comment</string>
+    <string name="add_comment">Add comment</string>
+    <string name="recent_comments">Recent comments</string>
+    <string name="delete">Delete</string>
 
 
 </resources>

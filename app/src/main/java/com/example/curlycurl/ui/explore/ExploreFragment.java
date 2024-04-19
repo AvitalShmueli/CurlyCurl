@@ -5,10 +5,13 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,12 +20,12 @@ import androidx.navigation.Navigation;
 
 import com.example.curlycurl.Interfaces.Callback_CommunityPostSelected;
 import com.example.curlycurl.Interfaces.Callback_ProductPostSelected;
-import com.example.curlycurl.MapsFragment;
 import com.example.curlycurl.Models.CommunityPost;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.R;
 import com.example.curlycurl.databinding.FragmentExploreBinding;
 import com.example.curlycurl.ui.community.CommunityPostsFragment;
+import com.example.curlycurl.ui.community_post.EditCommunityPostFragment;
 import com.example.curlycurl.ui.profile.ProductFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -41,7 +44,6 @@ public class ExploreFragment extends Fragment {
     private String searchTerm;
 
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -52,8 +54,9 @@ public class ExploreFragment extends Fragment {
         createBinding();
         initViews();
         Bundle args = getArguments();
-        if(args != null)
+        if (args != null)
             displayedFragment = args.getInt("displayedFragment");
+
         showChildFragment(displayedFragment);
 
         return root;
@@ -71,6 +74,16 @@ public class ExploreFragment extends Fragment {
 
         explore_TXT_search.setOnFocusChangeListener(focusChangeListener);
         explore_TXT_search.addTextChangedListener(searchWatcher);
+        explore_TXT_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    //Clear focus here from searchbox
+                    explore_TXT_search.clearFocus();
+                }
+                return false;
+            }
+        });
 
         explore_BTN_marketplace.setOnClickListener(v -> {
             displayedFragment = 0;
@@ -91,6 +104,7 @@ public class ExploreFragment extends Fragment {
     private void showChildFragment(int fragment) {
         if (showAsMap) {
             childFragment = new MapsFragment();
+            ((MapsFragment) childFragment).setSearchTerm(searchTerm);
             if (fragment == 0) { // products
                 explore_BTN_marketplace.setPaintFlags(explore_BTN_marketplace.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 explore_BTN_community.setPaintFlags(0);
@@ -101,16 +115,23 @@ public class ExploreFragment extends Fragment {
                         navigateToEditProductPostFragment(product);
                     }
                 });
+                ((MapsFragment) childFragment).setSearchTerm(searchTerm);
             } else { //community
                 explore_BTN_marketplace.setPaintFlags(0);
                 explore_BTN_community.setPaintFlags(explore_BTN_community.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 ((MapsFragment) childFragment).setMode(MapsFragment.MapFragmentMode.COMMUNITY);
                 ((MapsFragment) childFragment).setCallbackCommunityPostSelected(new Callback_CommunityPostSelected() {
                     @Override
-                    public void onCommunityPostSelected(CommunityPost post) {
-                        navigateToEditCommunityPostFragment(post);
+                    public void onCommunityPostSelected_comment(CommunityPost post) {
+                        navigateToEditCommunityPostFragment(post, EditCommunityPostFragment.PostMode.COMMENT);
+                    }
+
+                    @Override
+                    public void onCommunityPostSelected_edit(CommunityPost post) {
+                        navigateToEditCommunityPostFragment(post, EditCommunityPostFragment.PostMode.EDIT);
                     }
                 });
+                ((MapsFragment) childFragment).setSearchTerm(searchTerm);
             }
             explore_IMG_map.setImageResource(R.drawable.baseline_grid_view_24);
         } else {
@@ -130,8 +151,14 @@ public class ExploreFragment extends Fragment {
                 childFragment = new CommunityPostsFragment(CommunityPostsFragment.CommunityPostsFragmentMode.EXPLORE);
                 ((CommunityPostsFragment) childFragment).setCallbackCommunityPostSelected(new Callback_CommunityPostSelected() {
                     @Override
-                    public void onCommunityPostSelected(CommunityPost post) {
-                        navigateToEditCommunityPostFragment(post);
+                    public void onCommunityPostSelected_comment(CommunityPost post) {
+                        navigateToEditCommunityPostFragment(post, EditCommunityPostFragment.PostMode.COMMENT);
+                    }
+
+                    @Override
+                    public void onCommunityPostSelected_edit(CommunityPost post) {
+                        //no edit from map view
+                        navigateToEditCommunityPostFragment(post, EditCommunityPostFragment.PostMode.COMMENT);
                     }
                 });
             }
@@ -140,12 +167,10 @@ public class ExploreFragment extends Fragment {
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.explore_FRAGMENT_list, childFragment).commit();
-
     }
 
     private void navigateToEditProductPostFragment(Product product) {
         Bundle args = new Bundle();
-        //args.putSerializable("key", product);
         args.putString("product_id", product.getProductId());
         args.putString("product_name", product.getProductName());
         args.putString("product_description", product.getDescription());
@@ -156,12 +181,13 @@ public class ExploreFragment extends Fragment {
         args.putString("ownerUID", product.getOwnerUID());
         args.putString("userName", product.getUserName());
         args.putString("ownerEmail", product.getOwnerEmail());
+        args.putStringArrayList("tags",product.getTags());
         args.putString("frag", "explore");
         Navigation.findNavController(requireView()).navigate(R.id.navigateToEditProductPostFragment_explore, args);
 
     }
 
-    private void navigateToEditCommunityPostFragment(CommunityPost post) {
+    private void navigateToEditCommunityPostFragment(CommunityPost post, EditCommunityPostFragment.PostMode mode) {
         Bundle args = new Bundle();
         args.putString("post_id", post.getPostId());
         args.putString("post_post", post.getPost());
@@ -169,8 +195,10 @@ public class ExploreFragment extends Fragment {
         args.putString("post_city", post.getCity());
         args.putString("imageURL", post.getImageURL());
         args.putString("userName", post.getUserName());
-        args.putString("frag","explore");
-        Navigation.findNavController(requireView()).navigate(R.id.navigateToEditCommunityPostFragment_explore,args);
+        args.putStringArrayList("tags",post.getTags());
+        args.putString("frag", "explore");
+        args.putString("mode", String.valueOf(mode));
+        Navigation.findNavController(requireView()).navigate(R.id.navigateToEditCommunityPostFragment_explore, args);
 
     }
 
@@ -182,19 +210,23 @@ public class ExploreFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (explore_TXT_search.getEditableText().length() == 0) {
-                searchTerm = "";
-                if (displayedFragment == 0)
-                    ((ProductFragment) childFragment).setSearchTerm(searchTerm);
-                else
-                    ((CommunityPostsFragment) childFragment).setSearchTerm(searchTerm);
-                explore_IMG_search.setVisibility(View.VISIBLE);
-            }
+            explore_IMG_search.setVisibility(View.INVISIBLE);
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-
+            if (explore_TXT_search.getEditableText().length() == 0) {
+                searchTerm = "";
+                if (showAsMap)
+                    ((MapsFragment) childFragment).setSearchTerm(searchTerm);
+                else {
+                    if (displayedFragment == 0)
+                        ((ProductFragment) childFragment).setSearchTerm(searchTerm);
+                    else
+                        ((CommunityPostsFragment) childFragment).setSearchTerm(searchTerm);
+                }
+                explore_IMG_search.setVisibility(View.VISIBLE);
+            }
         }
     };
     View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
@@ -203,13 +235,18 @@ public class ExploreFragment extends Fragment {
             InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             searchTerm = explore_TXT_search.getEditableText().toString().trim();
-            if (displayedFragment == 0)
-                ((ProductFragment) childFragment).setSearchTerm(searchTerm);
-            else
-                ((CommunityPostsFragment) childFragment).setSearchTerm(searchTerm);
+            if (showAsMap)
+                ((MapsFragment) childFragment).setSearchTerm(searchTerm);
+            else {
+                if (displayedFragment == 0)
+                    ((ProductFragment) childFragment).setSearchTerm(searchTerm);
+                else
+                    ((CommunityPostsFragment) childFragment).setSearchTerm(searchTerm);
+            }
             explore_IMG_search.setVisibility(View.INVISIBLE);
         }
     };
+
 
     @Override
     public void onDestroyView() {

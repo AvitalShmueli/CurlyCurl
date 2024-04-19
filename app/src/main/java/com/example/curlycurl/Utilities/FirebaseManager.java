@@ -1,8 +1,17 @@
-package com.example.curlycurl;
+package com.example.curlycurl.Utilities;
 
+import static android.content.ContentValues.TAG;
+
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.example.curlycurl.Models.Comment;
 import com.example.curlycurl.Models.CommunityPost;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.Models.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -121,12 +130,12 @@ public class FirebaseManager {
                 product.getImageURL(),
                 "city",
                 product.getCity(),
+                "tags",
+                product.getTags(),
                 "modified",
                 new Timestamp(new Date())
         );
-
     }
-
 
     public void createNewCommunityPostInDB(CommunityPost post) {
         Map<String, Object> docCommunityPost = new HashMap<>();
@@ -137,16 +146,67 @@ public class FirebaseManager {
         docCommunityPost.put("imageURL", post.getImageURL());
         docCommunityPost.put("post", post.getPost());
         docCommunityPost.put("postId", post.getPostId());
+        docCommunityPost.put("tags", post.getTags());
         refCommunityPostsCollection.document(post.getPostId()).set(docCommunityPost);
     }
 
+    public void updateCommunityPostInDB(CommunityPost post) {
+        DocumentReference ref = refCommunityPostsCollection.document(post.getPostId());
+        ref.update(
+                "post",
+                post.getPost(),
+                "imageURL",
+                post.getImageURL(),
+                "city",
+                post.getCity(),
+                "tags",
+                post.getTags(),
+                "modified",
+                new Timestamp(new Date())
+        );
+    }
+
+    public void addCommentOnPost(CommunityPost post, Comment comment) {
+        DocumentReference postRef = refCommunityPostsCollection.document(post.getPostId());
+        Map<String, Object> docComment = new HashMap<>();
+        docComment.put("comment", comment.getComment());
+        docComment.put("commentId", comment.getCommentId());
+        docComment.put("postId", post.getPostId());
+        docComment.put("authorUID", comment.getAuthorUID());
+        docComment.put("userName", comment.getUserName());
+        docComment.put("created", comment.getCreated());
+        postRef.collection("comments").document(comment.getCommentId()).set(docComment);
+    }
 
     public CollectionReference getRefCommunityPostsCollection() {
         return refCommunityPostsCollection;
     }
 
+    public CollectionReference getPostComments(CommunityPost post) {
+        Log.d(TAG, "post to comments" + post.getPostId());
+        DocumentReference postRef = refCommunityPostsCollection.document(post.getPostId());
+        return postRef.collection("comments");
+    }
+
     public Query usersProduct() {
         return refProductsCollection.whereEqualTo("ownerUID", mUser.getUid()).orderBy("created", Query.Direction.DESCENDING);
+    }
+
+
+    public void deleteProductFromDB(Product product) {
+        refUser.update("all_products", FieldValue.arrayRemove(product.getProductId()));
+        refProductsCollection.document(product.getProductId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Product successfully deleted!");
+                SignalManager.getInstance().toast("Product successfully deleted!");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error deleting product", e);
+            }
+        });
     }
 
 

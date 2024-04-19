@@ -9,4 +9,4 @@
     map:cameraZoom="12"
     map:mapType="normal"
     map:uiZoomControls="true"
-    tools:context=".MapsFragment" />
+    tools:context=".ui.explore.MapsFragment" />

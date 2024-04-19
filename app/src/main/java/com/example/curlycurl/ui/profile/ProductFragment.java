@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.curlycurl.Adapters.MyProductRecyclerViewAdapter;
-import com.example.curlycurl.FirebaseManager;
+import com.example.curlycurl.Utilities.FirebaseManager;
 import com.example.curlycurl.Interfaces.Callback_ProductPostSelected;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.R;
@@ -34,9 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A fragment representing a list of Items.
- */
 public class ProductFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
 
@@ -55,10 +52,10 @@ public class ProductFragment extends Fragment {
     private String searchTerm = "";
 
 
-
     public ProductFragment() {
         this.mode = ProductsFragmentMode.USER;
     }
+
     public ProductFragment(ProductsFragmentMode mode) {
         this.mode = mode;
     }
@@ -90,8 +87,6 @@ public class ProductFragment extends Fragment {
         productList = new ArrayList<>();
         myAdapter = new MyProductRecyclerViewAdapter(getContext(), productList);
         myAdapter.setCallbackProductPostSelected(callbackProductPostSelected);
-
-
         EventChangeListener();
 
         // Set the adapter
@@ -144,15 +139,12 @@ public class ProductFragment extends Fragment {
             if (!searchTerm.isEmpty()) {
                 Query query = firebaseManager.getRefProductsCollection().where(
                         Filter.or(
+                                Filter.arrayContains("tags", searchTerm),
                                 Filter.and(
                                         Filter.greaterThanOrEqualTo("productName", searchTerm),
                                         Filter.lessThan("productName", searchTerm + 'z')
                                 ),
-                                Filter.equalTo("productType",searchTerm.toUpperCase()),
-                                Filter.and(
-                                        Filter.greaterThanOrEqualTo("userName", searchTerm),
-                                        Filter.lessThan("userName", searchTerm + 'z')
-                                )
+                                Filter.equalTo("productType", searchTerm.toUpperCase())
                         )
                 ).orderBy("created", Query.Direction.DESCENDING);
                 query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -160,9 +152,12 @@ public class ProductFragment extends Fragment {
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if (error != null) {
                             Log.e("Firestore error", error.getMessage());
+                            SignalManager.getInstance().toast("No results");
+                            productList.clear();
+                            myAdapter.notifyDataSetChanged();
                             return;
                         }
-                        if(value.getDocumentChanges().size()==0){
+                        if (value.getDocumentChanges().size() == 0) {
                             SignalManager.getInstance().toast("No results");
                             productList.clear();
                             myAdapter.notifyDataSetChanged();
@@ -177,8 +172,7 @@ public class ProductFragment extends Fragment {
                     }
                 });
             } else {
-                firebaseManager.getRefProductsCollection()
-                        .orderBy("created", Query.Direction.DESCENDING)
+                firebaseManager.getRefProductsCollection().orderBy("created", Query.Direction.DESCENDING)
                         .addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -195,6 +189,7 @@ public class ProductFragment extends Fragment {
                                 }
                             }
                         });
+
             }
         }
     }

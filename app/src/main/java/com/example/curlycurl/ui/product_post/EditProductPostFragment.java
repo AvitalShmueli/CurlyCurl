@@ -1,10 +1,11 @@
-package com.example.curlycurl;
+package com.example.curlycurl.ui.product_post;
 
 import static android.content.ContentValues.TAG;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -13,27 +14,34 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
+import com.example.curlycurl.Utilities.FirebaseManager;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.Models.User;
+import com.example.curlycurl.R;
 import com.example.curlycurl.Utilities.SignalManager;
 import com.example.curlycurl.databinding.FragmentEditProductPostBinding;
 import com.google.android.gms.tasks.Continuation;
@@ -43,6 +51,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -61,15 +72,15 @@ public class EditProductPostFragment extends Fragment {
     private FirebaseManager firebaseManager;
     private FirebaseStorage storage;
     private User connectedUser;
-    private LinearLayout editProductPost_CONTAINER_imageActions;
-    private TextInputEditText editProductPost_TXT_productName, editProductPost_TXT_productDescription;
+    private LinearLayout editProductPost_CONTAINER_imageActions, editProductPost_TXT_layout_addTags;
+    private TextInputEditText editProductPost_TXT_productName, editProductPost_TXT_productDescription, editProductPost_TXT_addLocation, editProductPost_TXT_addTags;
     private ShapeableImageView editProductPost_IMG_ImageView, editProductPost_IMG_back;
-    private MaterialButton editProductPost_BTN_addTags, editProductPost_BTN_selectImage, editProductPost_BTN_removeImage, editProductPost_BTN_addLocation, editProductPost_BTN_post;
+    private MaterialButton editProductPost_BTN_selectImage, editProductPost_BTN_removeImage, editProductPost_BTN_post, editProductPost_BTN_delete;
     private MaterialTextView editProductPost_LBL_title, editProductPost_LBL_ownerEmail;
     private ActivityResultLauncher<Intent> resultLauncher;
     private ArrayList<String> itemsProductType;
     private ArrayList<String> itemsProductCondition;
-    private TextInputLayout editProductPost_DD_layout_productType,editProductPost_DD_layout_productCondition;
+    private TextInputLayout editProductPost_DD_layout_productType, editProductPost_DD_layout_productCondition, editProductPost_TXT_layout_addLocation;
     private AutoCompleteTextView editProductPost_DD_productType, editProductPost_DD_productCondition;
     private Product.ProductCondition selectedCondition = null;
     private Product.ProductType selectedType = null;
@@ -79,6 +90,8 @@ public class EditProductPostFragment extends Fragment {
     private boolean isOwner;
     private String frag;
     private BottomNavigationView navBar;
+    private ChipGroup editProductPost_chipGroup_tags;
+    private ArrayList<String> arrTags;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -104,7 +117,8 @@ public class EditProductPostFragment extends Fragment {
                     .setImageURL(args.getString("imageURL"))
                     .setOwnerUID(args.getString("ownerUID"))
                     .setUserName(args.getString("userName"))
-                    .setOwnerEmail(args.getString("ownerEmail"));
+                    .setOwnerEmail(args.getString("ownerEmail"))
+                    .setTags(args.getStringArrayList("tags"));
             frag = args.getString("frag");
             assert product != null;
             Log.d(TAG, "product.getOwnerUID() " + product.getOwnerUID());
@@ -152,10 +166,14 @@ public class EditProductPostFragment extends Fragment {
         editProductPost_IMG_ImageView = binding.editProductPostIMGImageView;
         editProductPost_BTN_removeImage = binding.editProductPostBTNRemoveImage;
 
-        editProductPost_BTN_addLocation = binding.editProductPostBTNAddLocation;
-        editProductPost_BTN_addTags = binding.editProductPostBTNAddTags;
+        editProductPost_TXT_addLocation = binding.editProductPostTXTAddLocation;
+        editProductPost_TXT_layout_addLocation = binding.editProductPostTXTLayoutAddLocation;
+        editProductPost_TXT_addTags = binding.editProductPostTXTAddTags;
+        editProductPost_chipGroup_tags = binding.editProductPostChipGroupTags;
+        editProductPost_TXT_layout_addTags = binding.editProductPostTXTLayoutAddTags;
 
         editProductPost_BTN_post = binding.editProductPostBTNPost;
+        editProductPost_BTN_delete = binding.editProductPostBTNDelete;
         editProductPost_progressBar = binding.editProductPostProgressBar;
     }
 
@@ -163,9 +181,9 @@ public class EditProductPostFragment extends Fragment {
         editProductPost_progressBar.setVisibility(View.VISIBLE);
 
         editProductPost_IMG_back.setOnClickListener(this::changeFragment);
-
-        loadProductData();
         enableControlsIfOwner();
+        loadProductData();
+
         if (isOwner) {
             registerResult();
 
@@ -190,12 +208,25 @@ public class EditProductPostFragment extends Fragment {
             editProductPost_TXT_productName.setOnFocusChangeListener(focusChangeListener);
             editProductPost_TXT_productDescription.setOnFocusChangeListener(focusChangeListener);
 
-            editProductPost_BTN_addTags.setOnClickListener(view -> SignalManager.getInstance().toast("Tag"));
-
+            editProductPost_TXT_addTags.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        //Clear focus here from searchbox
+                        editProductPost_TXT_addTags.clearFocus();
+                        Chip chip = new Chip(getContext());
+                        String strTagValue = String.valueOf(editProductPost_TXT_addTags.getEditableText());
+                        chip.setText(strTagValue);
+                        setChipStyle(chip);
+                        editProductPost_chipGroup_tags.addView(chip);
+                        arrTags.add(strTagValue);
+                        editProductPost_TXT_addTags.setText("");
+                    }
+                    return false;
+                }
+            });
             editProductPost_BTN_selectImage.setOnClickListener(view -> pickImage());
             editProductPost_BTN_removeImage.setOnClickListener(view -> clearImage());
-
-            editProductPost_BTN_addLocation.setOnClickListener(view -> SignalManager.getInstance().toast("Location"));
 
             DocumentReference refUser = firebaseManager.getRefCurrentUser();
             refUser.get().addOnSuccessListener(documentSnapshot -> {
@@ -209,8 +240,8 @@ public class EditProductPostFragment extends Fragment {
                                 .setCondition(selectedCondition)
                                 .setOwnerUID(connectedUser.getUserId())
                                 .setUserName(connectedUser.getUsername())
-                                .setCity(connectedUser.getCity());
-
+                                .setCity(String.valueOf(editProductPost_TXT_addLocation.getEditableText()))
+                                .setTags(arrTags);
                         if (imageUri != null) {
                             uploadToFirebase(imageUri, product);
                         } else {
@@ -220,8 +251,33 @@ public class EditProductPostFragment extends Fragment {
                     });
                 }
             });
+            editProductPost_BTN_delete.setOnClickListener(view -> {
+                firebaseManager.deleteProductFromDB(product);
+                changeFragment(view);
+            });
         }
         editProductPost_progressBar.setVisibility(View.GONE);
+    }
+
+    private void setChipStyle(Chip chip) {
+        ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(requireContext(), null, 0, com.firebase.ui.auth.R.style.Widget_MaterialComponents_Chip_Entry);
+        chip.setChipDrawable(chipDrawable);
+        chip.setCheckable(false);
+        chip.setClickable(false);
+        chip.setChipIconResource(R.drawable.baseline_tag_24);
+        chip.setIconStartPadding(3f);
+        chip.setChipIconTint(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.dark_purple)));
+        chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        chip.setPadding(50, 10, 50, 10);
+        chip.setTextEndPadding(30f);
+        chip.setTextStartPadding(30f);
+        chip.setCloseIconVisible(isOwner);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProductPost_chipGroup_tags.removeView(chip);
+            }
+        });
     }
 
     private void loadProductData() {
@@ -235,6 +291,23 @@ public class EditProductPostFragment extends Fragment {
             selectedCondition = product.getCondition();
         }
         editProductPost_TXT_productDescription.setText(product.getDescription());
+        editProductPost_TXT_addLocation.setText(product.getCity());
+        arrTags = product.getTags();
+        if (arrTags != null) {
+            if (arrTags.size() == 0)
+                editProductPost_TXT_layout_addTags.setVisibility(isOwner ? View.VISIBLE : View.GONE);
+            else {
+                for (String tag : arrTags) {
+                    Chip chip = new Chip(getContext());
+                    chip.setText(tag);
+                    setChipStyle(chip);
+                    editProductPost_chipGroup_tags.addView(chip);
+                }
+            }
+        } else {
+            arrTags = new ArrayList<>();
+            editProductPost_TXT_layout_addTags.setVisibility(isOwner ? View.VISIBLE : View.GONE);
+        }
 
         if (product.getImageURL() != null) {
             Glide
@@ -248,9 +321,7 @@ public class EditProductPostFragment extends Fragment {
             editProductPost_IMG_ImageView.setVisibility(View.VISIBLE);
 
         } else {
-            editProductPost_progressBar.setVisibility(View.GONE);
-            editProductPost_IMG_ImageView.setImageURI(null);
-            editProductPost_IMG_ImageView.setVisibility(View.GONE);
+            clearImage();
         }
         if (!isOwner) {
             String strOwnerEmail = "✉   " + product.getOwnerEmail();
@@ -266,13 +337,17 @@ public class EditProductPostFragment extends Fragment {
         editProductPost_DD_layout_productType.setEndIconVisible(isOwner);
         editProductPost_DD_productCondition.setEnabled(isOwner);
         editProductPost_DD_layout_productCondition.setEndIconVisible(isOwner);
+        editProductPost_TXT_addTags.setEnabled(isOwner);
 
-        //editProductPost_BTN_addTags.setVisibility(isOwner?View.VISIBLE:View.GONE);
+        editProductPost_TXT_addLocation.setEnabled(isOwner);
+        editProductPost_TXT_layout_addLocation.setHelperTextEnabled(isOwner);
+        editProductPost_TXT_layout_addLocation.setHint(isOwner ? R.string.change_location : R.string.location);
+
         editProductPost_CONTAINER_imageActions.setVisibility(isOwner ? View.VISIBLE : View.GONE);
         editProductPost_BTN_selectImage.setVisibility(isOwner ? View.VISIBLE : View.GONE);
-        //editProductPost_BTN_addLocation.setVisibility(isOwner?View.VISIBLE:View.GONE);
         editProductPost_BTN_post.setVisibility(isOwner ? View.VISIBLE : View.GONE);
         editProductPost_BTN_post.setEnabled(isOwner);
+        editProductPost_BTN_delete.setVisibility(isOwner ? View.VISIBLE : View.GONE);
         editProductPost_BTN_removeImage.setVisibility(isOwner ? View.VISIBLE : View.GONE);
         editProductPost_LBL_ownerEmail.setVisibility(isOwner ? View.GONE : View.VISIBLE);
     }

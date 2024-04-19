@@ -61,7 +61,7 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:paddingVertical="15dp"
-                android:textColor="@color/black" />
+                android:textColor="?attr/colorControlNormal"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

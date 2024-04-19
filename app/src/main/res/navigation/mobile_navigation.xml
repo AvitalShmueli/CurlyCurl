@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/navigation_new_post"
-        android:name="com.example.curlycurl.ui.new_product_post.NewProductPostFragment"
+        android:name="com.example.curlycurl.ui.product_post.NewProductPostFragment"
         android:label="@string/title_new_post"
         tools:layout="@layout/fragment_new_product_post" >
         <action
@@ -61,7 +61,7 @@
 
     <fragment
         android:id="@+id/navigation_new_community_post"
-        android:name="com.example.curlycurl.ui.new_community_post.NewCommunityPostFragment"
+        android:name="com.example.curlycurl.ui.community_post.NewCommunityPostFragment"
         android:label="New Post"
         tools:layout="@layout/fragment_new_community_post" >
         <action
@@ -72,7 +72,7 @@
     </fragment>
     <fragment
         android:id="@+id/editProductPostFragment"
-        android:name="com.example.curlycurl.EditProductPostFragment"
+        android:name="com.example.curlycurl.ui.product_post.EditProductPostFragment"
         android:label="fragment_edit_product_post"
         tools:layout="@layout/fragment_edit_product_post" >
         <action
@@ -86,7 +86,7 @@
     </fragment>
     <fragment
         android:id="@+id/editCommunityPostFragment"
-        android:name="com.example.curlycurl.ui.new_community_post.EditCommunityPostFragment"
+        android:name="com.example.curlycurl.ui.community_post.EditCommunityPostFragment"
         android:label="EditCommunityPostFragment" >
         <action
             android:id="@+id/action_editCommunityPostFragment_to_navigation_community"

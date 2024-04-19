@@ -12,11 +12,11 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/data_margin_horizontal"
         android:layout_marginVertical="@dimen/data_margin_vertical"
+        android:clickable="true"
         android:elevation="@dimen/data_elevation"
         app:cardCornerRadius="@dimen/data_corner_radius"
         app:cardElevation="@dimen/data_elevation"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:clickable="true">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,12 +26,12 @@
                 android:id="@+id/community_container_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toTopOf="@id/community_IMG_photo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginBottom="6dp">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/community_LBL_author"
@@ -41,8 +41,8 @@
                     android:layout_marginVertical="6dp"
                     android:layout_weight="1"
                     android:text="@string/user_name"
-                    android:textSize="@dimen/buttons_text_size_small"
                     android:textColor="?colorPrimary"
+                    android:textSize="@dimen/buttons_text_size_small"
                     android:textStyle="bold" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -52,11 +52,11 @@
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:layout_marginVertical="6dp"
                     android:layout_weight="1"
+                    android:gravity="end"
                     android:text="@string/date_format"
-                    android:textSize="@dimen/buttons_text_size_small"
-                    android:textStyle="bold"
                     android:textColor="?colorPrimary"
-                    android:gravity="end"/>
+                    android:textSize="@dimen/buttons_text_size_small"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -68,11 +68,10 @@
                 android:background="@color/white"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/ic_launcher"
-                app:layout_constraintBottom_toTopOf="@id/community_LBL_post"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/community_container_header"
-                android:visibility="gone"/>
+                app:layout_constraintTop_toBottomOf="@id/community_container_header" />
 
 
             <com.google.android.material.textview.MaterialTextView
@@ -80,19 +79,77 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginTop="6dp"
                 android:ellipsize="end"
                 android:maxLines="6"
                 android:minLines="1"
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textSize="@dimen/text_size_small"
                 android:textStyle="normal"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/community_LBL_tags"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/community_IMG_photo"
                 tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel dolor auctor, bibendum lectus sit amet, bibendum velit. Nunc euismod, odio eget eleifend aliquet, nibh nibh malesuada risus, vel pretium nunc eros at elit. Donec finibus ultrices quam a luctus. Curabitur lobortis massa id sapien aliquam, id congue mi lobortis. Fusce id aliquam ante. Nullam congue velit ac bibendum eleifend. Nulla quis gravida odio, vel rutrum risus. Ut tincidunt, justo in fermentum bibendum, mauris mauris malesuada metus, ut eleifend augue lectus ut ex. Nam ut mollis ante." />
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/community_LBL_tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/community_LBL_post"
+                app:layout_constraintBottom_toTopOf="@id/community_CONTAINER_actions"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"/>
+
+            <LinearLayout
+                android:id="@+id/community_CONTAINER_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/community_BTN_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="@string/comment"
+                    android:textColor="?colorPrimary"
+                    android:textSize="@dimen/buttons_text_size_small"
+                    app:cornerRadius="0dp"
+                    app:icon="@drawable/baseline_add_comment_24"
+                    app:iconGravity="textStart"
+                    app:iconSize="15dp"
+                    app:iconTint="?colorPrimary" />
+
+                <Space
+                    android:id="@+id/community_SPACE_actions"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/community_BTN_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="@string/edit"
+                    android:textColor="?colorPrimary"
+                    android:textSize="@dimen/buttons_text_size_small"
+                    app:cornerRadius="0dp"
+                    app:icon="@drawable/baseline_edit_24"
+                    app:iconGravity="textStart"
+                    app:iconSize="15dp"
+                    app:iconTint="?colorPrimary"/>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

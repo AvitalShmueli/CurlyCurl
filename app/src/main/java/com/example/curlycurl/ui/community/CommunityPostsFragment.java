@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.curlycurl.Adapters.MyItemRecyclerViewAdapter;
-import com.example.curlycurl.FirebaseManager;
+import com.example.curlycurl.Utilities.FirebaseManager;
 import com.example.curlycurl.Interfaces.Callback_CommunityPostSelected;
 import com.example.curlycurl.Models.CommunityPost;
 import com.example.curlycurl.R;
@@ -31,9 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- */
+
 public class CommunityPostsFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
 
@@ -117,6 +115,7 @@ public class CommunityPostsFragment extends Fragment {
     }
 
     private void EventChangeListener() {
+
         communityPostList.clear();
         if (mode == CommunityPostsFragmentMode.COMMUNITY || searchTerm.isEmpty()) {
             showAllPosts();
@@ -126,7 +125,8 @@ public class CommunityPostsFragment extends Fragment {
                             Filter.and(
                                     Filter.greaterThanOrEqualTo("userName", searchTerm),
                                     Filter.lessThan("userName", searchTerm + 'z')
-                            )
+                            ),
+                            Filter.arrayContains("tags",searchTerm)
                     )
             ).orderBy("created", Query.Direction.DESCENDING);
             query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -136,7 +136,7 @@ public class CommunityPostsFragment extends Fragment {
                         Log.e("Firestore error", error.getMessage());
                         return;
                     }
-                    if(value.getDocumentChanges().size()==0){
+                    if (value.getDocumentChanges().size() == 0) {
                         SignalManager.getInstance().toast("No results");
                         communityPostList.clear();
                         myAdapter.notifyDataSetChanged();
@@ -151,6 +151,7 @@ public class CommunityPostsFragment extends Fragment {
                 }
             });
         }
+
     }
 
     private void showAllPosts() {

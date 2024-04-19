@@ -2,6 +2,7 @@ package com.example.curlycurl.Models;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Product {
@@ -32,6 +33,7 @@ public class Product {
     private String ownerUID;
     private String userName;
     private String ownerEmail;
+    private ArrayList<String> tags;
     private Timestamp created = new Timestamp(new Date());
     private Timestamp modified = new Timestamp(new Date());
 
@@ -146,4 +148,12 @@ public class Product {
         return this;
     }
 
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public Product setTags(ArrayList<String> tags) {
+        this.tags = tags;
+        return this;
+    }
 }

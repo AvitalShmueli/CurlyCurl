@@ -4,6 +4,8 @@ import com.example.curlycurl.Models.CommunityPost;
 
 public interface Callback_CommunityPostSelected {
 
-    void onCommunityPostSelected(CommunityPost post);
+    void onCommunityPostSelected_comment(CommunityPost post);
+    void onCommunityPostSelected_edit(CommunityPost post);
+
 
 }

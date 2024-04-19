@@ -1,8 +1,8 @@
 package com.example.curlycurl.Models;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class CommunityPost {
@@ -13,6 +13,7 @@ public class CommunityPost {
     private String authorUID;
     private String userName;
     private String city;
+    private ArrayList<String> tags = null;
     private boolean isCollapsed = true;
     public final static int MAX_LINES_COLLAPSED = 6;
 
@@ -88,6 +89,15 @@ public class CommunityPost {
 
     public CommunityPost setUserName(String userName) {
         this.userName = userName;
+        return this;
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public CommunityPost setTags(ArrayList<String> tags) {
+        this.tags = tags;
         return this;
     }
 }

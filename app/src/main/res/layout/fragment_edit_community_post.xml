@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context=".ui.new_community_post.NewCommunityPostFragment">
+    tools:context=".ui.community_post.EditCommunityPostFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -35,7 +35,6 @@
             android:textSize="@dimen/title_text_size"
             android:textStyle="bold" />
 
-
     </RelativeLayout>
 
     <ProgressBar
@@ -55,54 +54,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:hint="@string/write_post">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editCommunityPost_TXT_post"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:inputType="textMultiLine"
-                    android:lines="10"
-                    android:overScrollMode="always"
-                    android:scrollbarStyle="insideInset"
-                    android:scrollbars="vertical"
-                    android:scrollHorizontally="false"
-                    android:textColor="?attr/colorControlNormal" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="16dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/editCommunityPost_BTN_addTags"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@android:color/transparent"
-                    android:gravity="left|center_vertical"
-                    android:paddingLeft="0dp"
-                    android:text="@string/add_tags"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorControlNormal"
-                    android:textSize="@dimen/buttons_text_size_small"
-                    android:textStyle="bold"
-                    app:icon="@drawable/baseline_tag_24"
-                    app:iconTint="@color/dark_purple" />
-
-            </RelativeLayout>
-
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/editCommunityPost_IMG_ImageView"
                 android:layout_width="match_parent"
@@ -119,7 +70,6 @@
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal">
-
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/editCommunityPost_BTN_selectImage"
@@ -156,32 +106,117 @@
                     app:icon="@drawable/baseline_cancel_24"
                     app:iconTint="@color/dark_purple" />
 
-
             </LinearLayout>
 
-            <RelativeLayout
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:hint="@string/post">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editCommunityPost_TXT_post"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:scrollHorizontally="false"
+                    android:textColor="?attr/colorControlNormal"
+                    android:textSize="@dimen/text_size_small" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editCommunityPost_TXT_layout_addTags"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/add_tags"
+                app:startIconDrawable="@drawable/baseline_tag_24"
+                app:startIconMinSize="30dp"
+                app:startIconTint="@color/dark_purple">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editCommunityPost_TXT_addTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:paddingVertical="15dp"
+                    android:paddingLeft="32dp"
+                    android:textColor="?attr/colorControlNormal"
+                    android:textSize="@dimen/text_size_small" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/editCommunityPost_chipGroup_tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </com.google.android.material.chip.ChipGroup>
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!--com.google.android.material.button.MaterialButton
+                android:id="@+id/editCommunityPost_BTN_addLocation"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="6dp"
+                android:background="@android:color/transparent"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="0dp"
+                android:text="@string/add_location"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorControlNormal"
+                android:textSize="@dimen/buttons_text_size_small"
+                android:textStyle="bold"
+                app:icon="@drawable/baseline_location_on_24"
+                app:iconTint="@color/dark_purple" /-->
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editCommunityPost_TXT_layout_addLocation"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/add_location"
+                app:helperText="City, country / Name of a place"
+                app:startIconDrawable="@drawable/baseline_location_on_24"
+                app:startIconMinSize="30dp"
+                app:startIconTint="@color/dark_purple">
 
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/editCommunityPost_BTN_addLocation"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editCommunityPost_TXT_addLocation"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@android:color/transparent"
-                    android:gravity="left|center_vertical"
-                    android:paddingLeft="0dp"
-                    android:text="@string/add_location"
-                    android:textAllCaps="false"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:paddingVertical="15dp"
+                    android:paddingLeft="32dp"
                     android:textColor="?attr/colorControlNormal"
-                    android:textSize="@dimen/buttons_text_size_small"
-                    android:textStyle="bold"
-                    app:icon="@drawable/baseline_location_on_24"
-                    app:iconTint="@color/dark_purple" />
+                    android:textSize="@dimen/text_size_small" />
 
-            </RelativeLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/editCommunityPost_BTN_post"
@@ -189,15 +224,99 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="@dimen/data_margin_vertical"
                 android:layout_marginBottom="30dp"
                 android:background="@color/dark_purple"
                 android:enabled="false"
-                android:text="@string/post"
-                android:textSize="@dimen/new_product_text_size" />
+                android:text="@string/save_changes"
+                android:textSize="@dimen/buttons_text_size_big" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/editCommunityPost_BTN_addComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:layout_marginVertical="@dimen/activity_vertical_margin"
+                android:background="@color/dark_purple"
+                android:enabled="true"
+                android:text="@string/add_comment"
+                android:textSize="@dimen/buttons_text_size_big" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/light_purple" />
+
+            <LinearLayout
+                android:id="@+id/editCommunityPost_CONTAINER_commentActions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_weight="1"
+                    android:hint="@string/comment">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editCommunityPost_TXT_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:inputType="textMultiLine"
+                        android:maxLines="3"
+                        android:minLines="1"
+                        android:overScrollMode="always"
+                        android:scrollbarStyle="insideInset"
+                        android:scrollbars="vertical"
+                        android:scrollHorizontally="false"
+                        android:textColor="?attr/colorControlNormal"
+                        android:textSize="@dimen/text_size_small" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/editCommunityPost_BTN_submitComment"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:backgroundTint="@color/light_purple"
+                    android:enabled="true"
+                    app:icon="@drawable/baseline_send_24"
+                    app:iconTint="@color/dark_purple" />
+
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/editCommunityPost_LBL_CommentsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/recent_comments"
+                android:textColor="@color/dark_purple"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:id="@+id/editCommunityPost_FRAGMENT_comments"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:minHeight="300dp" />
 
         </LinearLayout>
+
 
     </ScrollView>
 

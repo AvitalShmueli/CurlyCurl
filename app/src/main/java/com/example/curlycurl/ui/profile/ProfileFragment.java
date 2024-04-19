@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
-import com.example.curlycurl.FirebaseManager;
+import com.example.curlycurl.Utilities.FirebaseManager;
 import com.example.curlycurl.Interfaces.Callback_ProductPostSelected;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.Models.User;
@@ -32,8 +32,6 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.Objects;
-
 
 public class ProfileFragment extends Fragment {
 
@@ -48,7 +46,6 @@ public class ProfileFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        //ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -115,7 +112,6 @@ public class ProfileFragment extends Fragment {
 
     private void navigateToEditProductPostFragment(Product product){
         Bundle args = new Bundle();
-        //args.putSerializable("key",product);
         args.putString("product_id", product.getProductId());
         args.putString("product_name", product.getProductName());
         args.putString("product_description", product.getDescription());
@@ -126,6 +122,7 @@ public class ProfileFragment extends Fragment {
         args.putString("ownerUID", product.getOwnerUID());
         args.putString("userName", product.getUserName());
         args.putString("ownerEmail", product.getOwnerEmail());
+        args.putStringArrayList("tags",product.getTags());
         args.putString("frag","profile");
         Navigation.findNavController(requireView()).navigate(R.id.navigateToEditProductPostFragment_profile,args);
 
