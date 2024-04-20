@@ -1,6 +1,6 @@
 # CurlyCurl
 
-Final project for Android Application Development course, in Afeka - the academic college of Engineering in Tel Aviv.
+Final project for Android Application Development course, in Afeka - the academic college of Engineering in Tel-Aviv.
 
 ## Overview
 
@@ -23,7 +23,7 @@ After signing-up (on the first login), the user can fill additional information 
 
 <div class="row">
   <img src="https://github.com/AvitalShmueli/CurlyCurl/assets/158744805/1f8ac64c-15dd-4c9c-835a-c4702b2ba0c4" alt="Login" style="height:500px;"/>
-  <img src="https://github.com/AvitalShmueli/CurlyCurl/assets/158744805/1837f96c-5bf1-4a5c-b1ba-a0f015c8a192" alt="EditProfile" style="height:500px;"/>
+  <img src="https://github.com/AvitalShmueli/CurlyCurl/assets/158744805/c09f2593-66db-44dc-9dac-f20e7378ec03" alt="EditProfile" style="height:500px;"/>
 </div>
 
 
@@ -43,7 +43,6 @@ The user can also add tags that will make the product easier to search, a pictur
  </div>
 
 
-
 #### 3. Community
 
 - **Create a new post:** Users can create a new post in the community section, there they can write about hair routines, product recommendations and more.
@@ -60,7 +59,7 @@ The user can add a picture from the gallery, add tags that will make the post ea
  </div>
 
 
-- **Browse the community posts and leave a comment on a post**
+- **Browse the community posts and leave a comment on a post.**
 
 <div class="row">
     <img src="https://github.com/AvitalShmueli/CurlyCurl/assets/158744805/c6d343a8-1a69-474a-8e9d-e7dcc4fac4ac" alt="Community" style="height:500px;"/>
@@ -74,7 +73,7 @@ The user can add a picture from the gallery, add tags that will make the post ea
 
 - **Search for community posts:** Users can scroll or search by username or tags.
 
-- **View search results in map view or list view**
+- **View search results in map view or list view.**
 
 <div class="row">
     <img src="https://github.com/AvitalShmueli/CurlyCurl/assets/158744805/cc6a3216-7622-4999-8598-dc8d60102539" alt="ExploreProducts" style="height:500px;"/>
@@ -90,18 +89,22 @@ The user can add a picture from the gallery, add tags that will make the post ea
 - Community - members can write posts in order to share their experience and knowledge with others.
 - Exploring section - where one can search using keywords. The results will be displayed using tabs to separate between marketplace and community posts. The marketplace tab will filter the results by product name, location, tag or category – and will display them in a gallery view and a map view.
 
+
 ## Technology Stack
 
 - **Frontend:** Java
 - **Backend:** Firebase
 - **Database:** Firebase (Firestore + Firebase storage)
 
+
 ## How To Use
 1. Sign up or login to your account.
 2. Start posting your give-away products or share your experience and recommendations in the community.
 3. See a product that you like? You can contact the owner using the posted email address.
 
-![Mockup1](https://github.com/AvitalShmueli/CurlyCurl/assets/158744805/6db0e1cf-21a6-4a1f-9851-f07fea9fe5cd)
+
+![Mockup1](https://github.com/AvitalShmueli/CurlyCurl/assets/158744805/cda4130c-6834-47fe-a975-5cd05e471080)
+
 ![Mockup2](https://github.com/AvitalShmueli/CurlyCurl/assets/158744805/3322bb52-a292-406b-83a0-91a211467b60)
 
 
