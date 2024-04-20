@@ -348,7 +348,7 @@ public class EditCommunityPostFragment extends Fragment {
         editCommunityPost_CONTAINER_commentActions.setVisibility(visibility);
         editCommunityPost_TXT_comment.setVisibility(visibility);
         editCommunityPost_BTN_submitComment.setVisibility(visibility);
-        resetInputControls();
+        editCommunityPost_TXT_comment.setText("");
     }
 
 

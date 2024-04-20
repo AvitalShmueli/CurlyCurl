@@ -173,15 +173,15 @@
                     android:textColor="?attr/colorControlNormal"
                     android:textSize="@dimen/text_size_small" />
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/editProductPost_chipGroup_tags"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </com.google.android.material.chip.ChipGroup>
-
-
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/editProductPost_chipGroup_tags"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin">
+
+            </com.google.android.material.chip.ChipGroup>
 
             <!--com.google.android.material.button.MaterialButton
                 android:id="@+id/editProductPost_BTN_addLocation"

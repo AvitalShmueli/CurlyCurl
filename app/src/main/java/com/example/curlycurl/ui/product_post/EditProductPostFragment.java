@@ -72,7 +72,7 @@ public class EditProductPostFragment extends Fragment {
     private FirebaseManager firebaseManager;
     private FirebaseStorage storage;
     private User connectedUser;
-    private LinearLayout editProductPost_CONTAINER_imageActions, editProductPost_TXT_layout_addTags;
+    private LinearLayout editProductPost_CONTAINER_imageActions;
     private TextInputEditText editProductPost_TXT_productName, editProductPost_TXT_productDescription, editProductPost_TXT_addLocation, editProductPost_TXT_addTags;
     private ShapeableImageView editProductPost_IMG_ImageView, editProductPost_IMG_back;
     private MaterialButton editProductPost_BTN_selectImage, editProductPost_BTN_removeImage, editProductPost_BTN_post, editProductPost_BTN_delete;
@@ -80,7 +80,7 @@ public class EditProductPostFragment extends Fragment {
     private ActivityResultLauncher<Intent> resultLauncher;
     private ArrayList<String> itemsProductType;
     private ArrayList<String> itemsProductCondition;
-    private TextInputLayout editProductPost_DD_layout_productType, editProductPost_DD_layout_productCondition, editProductPost_TXT_layout_addLocation;
+    private TextInputLayout editProductPost_DD_layout_productType, editProductPost_DD_layout_productCondition, editProductPost_TXT_layout_addLocation, editProductPost_TXT_layout_addTags;
     private AutoCompleteTextView editProductPost_DD_productType, editProductPost_DD_productCondition;
     private Product.ProductCondition selectedCondition = null;
     private Product.ProductType selectedType = null;
@@ -341,6 +341,7 @@ public class EditProductPostFragment extends Fragment {
         editProductPost_DD_productCondition.setEnabled(isOwner);
         editProductPost_DD_layout_productCondition.setEndIconVisible(isOwner);
         editProductPost_TXT_addTags.setEnabled(isOwner);
+        editProductPost_TXT_layout_addTags.setVisibility(isOwner ? View.VISIBLE : View.GONE);
 
         editProductPost_TXT_addLocation.setEnabled(isOwner);
         editProductPost_TXT_layout_addLocation.setHelperTextEnabled(isOwner);
