@@ -23,6 +23,7 @@ import java.util.Objects;
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,14 +57,12 @@ public class LoginActivity extends AppCompatActivity {
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 //new AuthUI.IdpConfig.PhoneBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build());
-                //new AuthUI.IdpConfig.FacebookBuilder().build());
 
         // Create and launch sign-in intent
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
-                //.setTheme(R.style.LoginUIStyle)
-                //.setLogo(R.drawable.full_logo_title)
+                .setLogo(R.drawable.logo_title_2)
                 .setIsSmartLockEnabled(false)
                 .build();
         signInLauncher.launch(signInIntent);
@@ -75,13 +74,9 @@ public class LoginActivity extends AppCompatActivity {
             // Successfully signed in
             user = mAuth.getCurrentUser();
             if (user != null) {
-                long creationTimestamp = Objects.requireNonNull(user.getMetadata()).getCreationTimestamp();
-                long lastSignInTimestamp = user.getMetadata().getLastSignInTimestamp();
-                if (creationTimestamp == lastSignInTimestamp) {
-                    //do create new user
+                if (response.isNewUser()) {
                     FirebaseManager.getInstance().createUsersProfileInDB(user);
                     changeActivity(EditProfileInfoActivity.class);
-                    //createUsersProfileInDB(user);
                 } else {
                     //user is exists, just do login
                     changeActivity(MainActivity.class);
@@ -95,23 +90,7 @@ public class LoginActivity extends AppCompatActivity {
             changeActivity(OpeningScreenActivity.class);
         }
 
-
     }
-
-
-    /*
-    private void createUsersProfileInDB(FirebaseUser user){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        User newUserProfile = new User().
-                setUsername(user.getDisplayName())
-                .setEmail(user.getEmail())
-                .setUuid(user.getUid());
-
-        db.collection("users").document(user.getUid()).set(newUserProfile);
-        changeActivity(EditProfileInfoActivity.class);
-
-    }*/
-
 
     private void changeActivity(Class<?> cls) {
         Intent destination = new Intent(this, cls);

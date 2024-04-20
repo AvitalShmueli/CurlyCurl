@@ -2,13 +2,7 @@ package com.example.curlycurl;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +21,13 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.curlycurl.Models.User;
 import com.example.curlycurl.Utilities.FirebaseManager;
@@ -53,11 +54,10 @@ import java.util.Objects;
 
 public class EditProfileInfoActivity extends AppCompatActivity {
     private TextInputEditText editProfile_TXT_userName, editProfile_TXT_email, editProfile_TXT_city;
-    private ShapeableImageView editProfile_IMG_ImageView;
+    private ShapeableImageView editProfile_IMG_ImageView, editProfile_IMG_tooltip;
     private MaterialButton editProfile_BTN_selectImage, editProfile_BTN_save;
     private AutoCompleteTextView editProfile_DD_curlType;
     private FirebaseManager firebaseManager;
-    private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseStorage storage;
     private Uri imageUri;
@@ -99,6 +99,7 @@ public class EditProfileInfoActivity extends AppCompatActivity {
         editProfile_BTN_selectImage = findViewById(R.id.editProfile_BTN_selectImage);
         editProfile_BTN_save = findViewById(R.id.editProfile_BTN_save);
         editProfile_progressBar = findViewById(R.id.editProfile_progressBar);
+        editProfile_IMG_tooltip = findViewById(R.id.editProfile_IMG_tooltip);
     }
 
     private void initViews() {
@@ -108,7 +109,6 @@ public class EditProfileInfoActivity extends AppCompatActivity {
         editProfile_TXT_city.addTextChangedListener(profileWatcher);
 
         editProfile_TXT_userName.setOnFocusChangeListener(focusChangeListener);
-        editProfile_TXT_email.setOnFocusChangeListener(focusChangeListener);
         editProfile_TXT_city.setOnFocusChangeListener(focusChangeListener);
 
         ArrayAdapter<String> adapterItems_curlType = new ArrayAdapter<>(this, R.layout.dropdown_item, itemsCurlType);
@@ -119,7 +119,7 @@ public class EditProfileInfoActivity extends AppCompatActivity {
         });
 
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         if (mUser != null) {
             registerResult();
@@ -131,6 +131,16 @@ public class EditProfileInfoActivity extends AppCompatActivity {
             });
             editProfile_BTN_save.setOnClickListener(v -> updateProfile());
         }
+
+        editProfile_IMG_tooltip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(EditProfileInfoActivity.this);
+                dialog.setContentView(R.layout.image_dialog);
+                dialog.show();
+            }
+        });
+
         editProfile_progressBar.setVisibility(View.GONE);
     }
 

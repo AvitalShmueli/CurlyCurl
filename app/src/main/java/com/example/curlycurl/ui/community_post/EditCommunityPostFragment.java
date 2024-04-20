@@ -131,7 +131,7 @@ public class EditCommunityPostFragment extends Fragment {
             frag = args.getString("frag");
             mode = PostMode.valueOf(args.getString("mode"));
             assert post != null;
-            Log.d(TAG, "post.getAuthorUID() " + post.getAuthorUID());
+            Log.d(TAG, "post.getAuthorUID() " + post.getAuthorUID() +" | mode: "+mode);
             isAuthor = post.getAuthorUID().equals(firebaseManager.getmUser().getUid());
         }
 
@@ -187,11 +187,13 @@ public class EditCommunityPostFragment extends Fragment {
                         //Clear focus here from searchbox
                         editCommunityPost_TXT_addTags.clearFocus();
                         Chip chip = new Chip(getContext());
-                        String strTagValue = String.valueOf(editCommunityPost_TXT_addTags.getEditableText());
-                        chip.setText(strTagValue);
-                        setChipStyle(chip);
-                        editCommunityPost_chipGroup_tags.addView(chip);
-                        arrTags.add(strTagValue);
+                        String strTagValue = String.valueOf(editCommunityPost_TXT_addTags.getEditableText()).trim();
+                        if(!strTagValue.isEmpty() && !arrTags.contains(strTagValue)) {
+                            chip.setText(strTagValue);
+                            setChipStyle(chip);
+                            editCommunityPost_chipGroup_tags.addView(chip);
+                            arrTags.add(strTagValue);
+                        }
                         editCommunityPost_TXT_addTags.setText("");
                     }
                     return false;
@@ -276,6 +278,7 @@ public class EditCommunityPostFragment extends Fragment {
         chip.setOnCloseIconClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                arrTags.remove(chip.getText().toString());
                 editCommunityPost_chipGroup_tags.removeView(chip);
             }
         });
@@ -287,16 +290,12 @@ public class EditCommunityPostFragment extends Fragment {
         editCommunityPost_TXT_addLocation.setText(post.getCity());
         arrTags = post.getTags();
         if (arrTags != null) {
-            if (arrTags.size() == 0)
-                editCommunityPost_TXT_layout_addTags.setVisibility(isAuthor && mode == PostMode.EDIT ? View.VISIBLE : View.GONE);
-            else {
                 for (String tag : arrTags) {
                     Chip chip = new Chip(getContext());
                     chip.setText(tag);
                     setChipStyle(chip);
                     editCommunityPost_chipGroup_tags.addView(chip);
                 }
-            }
         } else {
             arrTags = new ArrayList<>();
             editCommunityPost_TXT_layout_addTags.setVisibility(isAuthor && mode == PostMode.EDIT ? View.VISIBLE : View.GONE);
@@ -326,6 +325,7 @@ public class EditCommunityPostFragment extends Fragment {
         editCommunityPost_TXT_layout_addLocation.setHint(isEditMode ? R.string.change_location : R.string.location);
         editCommunityPost_TXT_layout_addLocation.setHelperTextEnabled(isEditMode);
         editCommunityPost_TXT_addTags.setEnabled(isEditMode);
+        editCommunityPost_TXT_layout_addTags.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
 
         editCommunityPost_CONTAINER_imageActions.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
         editCommunityPost_BTN_selectImage.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
@@ -440,7 +440,6 @@ public class EditCommunityPostFragment extends Fragment {
                         try {
                             imageUri = result.getData().getData();
                             editCommunityPost_IMG_ImageView.setImageURI(imageUri);
-                            Log.d(TAG, "test_imageURI " + imageUri);
                             editCommunityPost_IMG_ImageView.setVisibility(View.VISIBLE);
                             editCommunityPost_BTN_selectImage.setText(R.string.change_picture);
                             editCommunityPost_BTN_selectImage.setVisibility(View.VISIBLE);
@@ -480,7 +479,6 @@ public class EditCommunityPostFragment extends Fragment {
     };
 
     private void changeFragment(View v) {
-        resetInputControls();
         if (frag.equals("community"))
             Navigation.findNavController(v).navigate(R.id.action_editCommunityPostFragment_to_navigation_community);
         else {
@@ -500,6 +498,7 @@ public class EditCommunityPostFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        resetInputControls();
         binding = null;
     }
 

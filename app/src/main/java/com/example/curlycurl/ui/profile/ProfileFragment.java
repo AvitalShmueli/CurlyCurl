@@ -1,10 +1,7 @@
 package com.example.curlycurl.ui.profile;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +13,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
-import com.example.curlycurl.Utilities.FirebaseManager;
 import com.example.curlycurl.Interfaces.Callback_ProductPostSelected;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.Models.User;
 import com.example.curlycurl.OpeningScreenActivity;
 import com.example.curlycurl.R;
+import com.example.curlycurl.Utilities.FirebaseManager;
 import com.example.curlycurl.databinding.FragmentProfileBinding;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,8 +33,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-
-    private TextView txt_username, txt_postsNum;
+    private TextView txt_username, txt_details;
     private ShapeableImageView profile_IMG_user;
     private MaterialButton profile_BTN_signOut;
     private FirebaseManager firebaseManager;
@@ -59,7 +55,6 @@ public class ProfileFragment extends Fragment {
         childFragment.setCallbackProductPostSelected(new Callback_ProductPostSelected() {
             @Override
             public void onProductPostSelected(Product product) {
-                Log.d(TAG,"onclick | " +product.getProductId() + " | "+product.getOwnerUID());
                 navigateToEditProductPostFragment(product);
             }
         });
@@ -72,10 +67,9 @@ public class ProfileFragment extends Fragment {
 
     private void createBinding() {
         txt_username = binding.profileLBLUsername;
-        txt_postsNum = binding.profileLBLPostsNum;
+        txt_details = binding.profileLBLDetails;
         profile_IMG_user = binding.profileIMGUser;
         profile_BTN_signOut = binding.profileBTNSignOut;
-
     }
 
     private void initViews() {
@@ -87,13 +81,20 @@ public class ProfileFragment extends Fragment {
                 connectedUser = documentSnapshot.toObject(User.class);
                 if (connectedUser != null) {
                     txt_username.setText(connectedUser.getUsername());
-                    txt_postsNum.setText(connectedUser.getCity());
+                    StringBuilder strDetails = new StringBuilder();
+                    if (connectedUser.getCurlType() != null)
+                        strDetails.append(connectedUser.getCurlType().toString().substring(1));
+                    if (connectedUser.getCity() != null) {
+                        strDetails.append(" | ").append(connectedUser.getCity());
+                    }
+                    txt_details.setText(strDetails);
                     Glide
-                            .with(getContext())
+                            .with(requireContext())
                             .load(connectedUser.getImageURL())
                             .centerCrop()
                             .placeholder(R.drawable.user_photo)
                             .into(profile_IMG_user);
+
                 }
             }
         });
@@ -110,7 +111,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void navigateToEditProductPostFragment(Product product){
+    private void navigateToEditProductPostFragment(Product product) {
         Bundle args = new Bundle();
         args.putString("product_id", product.getProductId());
         args.putString("product_name", product.getProductName());
@@ -122,9 +123,9 @@ public class ProfileFragment extends Fragment {
         args.putString("ownerUID", product.getOwnerUID());
         args.putString("userName", product.getUserName());
         args.putString("ownerEmail", product.getOwnerEmail());
-        args.putStringArrayList("tags",product.getTags());
-        args.putString("frag","profile");
-        Navigation.findNavController(requireView()).navigate(R.id.navigateToEditProductPostFragment_profile,args);
+        args.putStringArrayList("tags", product.getTags());
+        args.putString("frag", "profile");
+        Navigation.findNavController(requireView()).navigate(R.id.navigateToEditProductPostFragment_profile, args);
 
     }
 

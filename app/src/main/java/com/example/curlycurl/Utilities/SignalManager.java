@@ -6,7 +6,7 @@ import android.widget.Toast;
 public class SignalManager {
 
     private static SignalManager instance = null;
-    private Context context;
+    private final Context context;
 
     private SignalManager(Context context) {
         this.context = context;

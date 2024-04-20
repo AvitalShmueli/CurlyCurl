@@ -40,7 +40,7 @@
             app:shapeAppearanceOverlay="@style/roundedImageView" />
 
         <TextView
-            android:id="@+id/profile_LBL_posts_num"
+            android:id="@+id/profile_LBL_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/profile_LBL_username"
@@ -51,8 +51,7 @@
             android:textAlignment="center"
             android:textSize="@dimen/profile_text_size"
             android:textStyle="bold"
-            android:textColor="@color/dark_purple"
-            tools:text="0 posts" />
+            android:textColor="@color/dark_purple" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/profile_BTN_signOut"

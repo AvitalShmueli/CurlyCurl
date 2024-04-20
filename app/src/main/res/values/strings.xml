@@ -2,12 +2,10 @@
     <string name="app_name">CurlyCurl</string>
     <string name="login">Login / Sign-Up</string>
     <string name="sign_up">Sign-Up</string>
-    <string name="title_activity_navigation_menu">NavigationMenu</string>
     <string name="title_profile">Profile</string>
     <string name="title_new_post">New Post</string>
     <string name="title_explore">Explore</string>
     <string name="title_community">Community</string>
-    <string name="title_activity_navigation">Navigation</string>
     <string name="hint_product_name">Product Name</string>
     <string name="hint_product_description">Product Description</string>
     <string name="new_post">New Post</string>
@@ -30,7 +28,6 @@
     <string name="email">Email</string>
     <string name="save">save</string>
     <string name="my_hair_products">My hair products</string>
-    <string name="default_date">JAN 01 2001</string>
     <string name="change_picture">Change Picture</string>
     <string name="remove_image">Remove Image</string>
     <string name="write_post">Write a post...</string>

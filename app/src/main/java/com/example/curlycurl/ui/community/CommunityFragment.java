@@ -1,20 +1,15 @@
 package com.example.curlycurl.ui.community;
 
-import static android.content.ContentValues.TAG;
-
-import androidx.fragment.app.FragmentTransaction;
-
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.curlycurl.Interfaces.Callback_CommunityPostSelected;
 import com.example.curlycurl.Models.CommunityPost;
@@ -38,7 +33,6 @@ public class CommunityFragment extends Fragment {
         childFragment.setCallbackCommunityPostSelected(new Callback_CommunityPostSelected() {
             @Override
             public void onCommunityPostSelected_comment(CommunityPost post) {
-                Log.d(TAG,"onclick | " +post.getPostId() + " | "+post.getAuthorUID());
                 navigateToEditCommunityPostFragment(post, EditCommunityPostFragment.PostMode.COMMENT);
             }
 

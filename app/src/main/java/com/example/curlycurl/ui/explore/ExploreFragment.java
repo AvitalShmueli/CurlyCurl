@@ -71,7 +71,6 @@ public class ExploreFragment extends Fragment {
     }
 
     private void initViews() {
-
         explore_TXT_search.setOnFocusChangeListener(focusChangeListener);
         explore_TXT_search.addTextChangedListener(searchWatcher);
         explore_TXT_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -157,7 +156,7 @@ public class ExploreFragment extends Fragment {
                     @Override
                     public void onCommunityPostSelected_edit(CommunityPost post) {
                         //no edit from map view
-                        navigateToEditCommunityPostFragment(post, EditCommunityPostFragment.PostMode.COMMENT);
+                        navigateToEditCommunityPostFragment(post, EditCommunityPostFragment.PostMode.EDIT);
                     }
                 });
             }
@@ -195,8 +194,8 @@ public class ExploreFragment extends Fragment {
         args.putString("post_city", post.getCity());
         args.putString("imageURL", post.getImageURL());
         args.putString("userName", post.getUserName());
-        args.putStringArrayList("tags", post.getTags());
-        args.putString("frag", "explore");
+        args.putStringArrayList("tags",post.getTags());
+        args.putString("frag","explore");
         args.putString("mode", String.valueOf(mode));
         Navigation.findNavController(requireView()).navigate(R.id.navigateToEditCommunityPostFragment_explore, args);
 
@@ -251,8 +250,13 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        childFragment = null;
         showAsMap = false;
         binding = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        explore_TXT_search.setText("");
     }
 }

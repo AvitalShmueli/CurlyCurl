@@ -3,7 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <!-- Text size -->
-    <dimen name="app_name_text_size">90sp</dimen>
     <dimen name="buttons_text_size_big">16sp</dimen>
     <dimen name="title_text_size">20sp</dimen>
     <dimen name="profile_text_size">16sp</dimen>
@@ -11,7 +10,6 @@
     <dimen name="text_size_small">14sp</dimen>
     <!-- Margins -->
     <dimen name="margin_buttons">40dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
     <dimen name="data_elevation">5dp</dimen>
     <dimen name="data_corner_radius">15dp</dimen>
     <dimen name="data_margin_vertical">10dp</dimen>

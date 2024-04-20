@@ -98,7 +98,6 @@ public class ProductFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            //recyclerView.setAdapter(new MyProductRecyclerViewAdapter(PlaceholderContent.ITEMS));
             recyclerView.setAdapter(myAdapter);
         }
 
@@ -117,7 +116,6 @@ public class ProductFragment extends Fragment {
     }
 
     private void EventChangeListener() {
-        productList.clear();
         if (mode == ProductsFragmentMode.USER) {
             firebaseManager.usersProduct().addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
@@ -126,6 +124,8 @@ public class ProductFragment extends Fragment {
                         Log.e("Firestore error", error.getMessage());
                         return;
                     }
+
+                    productList.clear();
 
                     for (DocumentChange dc : value.getDocumentChanges()) {
                         if (dc.getType() == DocumentChange.Type.ADDED) {
@@ -159,12 +159,15 @@ public class ProductFragment extends Fragment {
                             myAdapter.notifyDataSetChanged();
                             return;
                         }
+
+                        productList.clear();
+
                         if (value.getDocumentChanges().size() == 0) {
                             SignalManager.getInstance().toast("No results");
-                            productList.clear();
                             myAdapter.notifyDataSetChanged();
                             return;
                         }
+
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             if (dc.getType() == DocumentChange.Type.ADDED) {
                                 Product p = dc.getDocument().toObject(Product.class);
@@ -184,6 +187,8 @@ public class ProductFragment extends Fragment {
                                     Log.e("Firestore error", error.getMessage());
                                     return;
                                 }
+
+                                productList.clear();
 
                                 for (DocumentChange dc : value.getDocumentChanges()) {
                                     if (dc.getType() == DocumentChange.Type.ADDED) {

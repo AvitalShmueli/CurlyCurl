@@ -33,7 +33,6 @@ public class FirebaseManager {
     private CollectionReference refUsersCollection;
     private DocumentReference refUser;
     private CollectionReference refProductsCollection;
-    private DocumentReference refProduct;
     private CollectionReference refCommunityPostsCollection;
 
 
@@ -55,20 +54,12 @@ public class FirebaseManager {
         return instance;
     }
 
-    public FirebaseFirestore getDBRef() {
-        return db;
-    }
-
     public FirebaseAuth getmAuth() {
         return mAuth;
     }
 
     public FirebaseUser getmUser() {
         return mUser;
-    }
-
-    public CollectionReference getRefUsersCollection() {
-        return refUsersCollection;
     }
 
     public DocumentReference getRefCurrentUser() {
@@ -90,7 +81,6 @@ public class FirebaseManager {
     }
 
     public void updateUserProfile(User user) {
-        //DocumentReference ref = refUsersCollection.document(user.getUserId());
         DocumentReference ref = refUsersCollection.document(user.getUserId());
         ref.update(
                 "username",

@@ -47,7 +47,6 @@ public class MapsFragment extends Fragment {
     }
 
     private GoogleMap mMap;
-    private Marker selectedMarker;
     private FirebaseManager firebaseManager;
     private HashMap<Marker, Product> productsOnMap = new HashMap<>();
     private HashMap<Marker, CommunityPost> postsOnMap = new HashMap<>();
@@ -62,9 +61,7 @@ public class MapsFragment extends Fragment {
             mMap = googleMap;
 
             LatLng Afeka = new LatLng(App.DEFAULT_LAN, App.DEFAULT_LON);
-            //selectedMarker = googleMap.addMarker(new MarkerOptions().position(Afeka).title("Marker in Afeka"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(Afeka));
-            Log.d(TAG, "map - onMapReady");
 
             showSearchResult();
         }
@@ -127,7 +124,6 @@ public class MapsFragment extends Fragment {
 
                 for (DocumentChange dc : value.getDocumentChanges()) {
                     if (dc.getType() == DocumentChange.Type.ADDED) {
-                        //productList.add((dc.getDocument().toObject(Product.class)));
                         showMarkerByAddress((dc.getDocument().toObject(Product.class)));
                     }
                 }
@@ -235,8 +231,7 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_maps, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
     @Override
@@ -244,7 +239,6 @@ public class MapsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        Log.d(TAG,"Map fragment - onViewCreated");
         firebaseManager = FirebaseManager.getInstance();
 
         if (mapFragment != null) {
@@ -263,16 +257,6 @@ public class MapsFragment extends Fragment {
         }
     }
 
-
-    public void zoom(String title, double lat, double lon) {
-        if (mMap != null) {
-            selectedMarker.remove();
-            LatLng marker = new LatLng(lat, lon);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 18));
-            selectedMarker = mMap.addMarker(new MarkerOptions().title(title).position(marker));
-        }
-    }
-
     public void setCallbackProductPostSelected(Callback_ProductPostSelected callbackProductPostSelected) {
         this.callbackProductPostSelected = callbackProductPostSelected;
     }
@@ -281,8 +265,4 @@ public class MapsFragment extends Fragment {
         this.callbackCommunityPostSelected = callbackCommunityPostSelected;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 }

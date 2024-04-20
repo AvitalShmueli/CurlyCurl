@@ -131,11 +131,13 @@ public class NewCommunityPostFragment extends Fragment {
                     //Clear focus here from searchbox
                     communityPost_TXT_addTags.clearFocus();
                     Chip chip = new Chip(getContext());
-                    String strTagValue = String.valueOf(communityPost_TXT_addTags.getEditableText());
-                    chip.setText(strTagValue);
-                    setChipStyle(chip);
-                    communityPost_chipGroup_tags.addView(chip);
-                    arrTags.add(strTagValue);
+                    String strTagValue = String.valueOf(communityPost_TXT_addTags.getEditableText()).trim();
+                    if(!strTagValue.isEmpty() && !arrTags.contains(strTagValue)) {
+                        chip.setText(strTagValue);
+                        setChipStyle(chip);
+                        communityPost_chipGroup_tags.addView(chip);
+                        arrTags.add(strTagValue);
+                    }
                     communityPost_TXT_addTags.setText("");
                 }
                 return false;
@@ -187,6 +189,7 @@ public class NewCommunityPostFragment extends Fragment {
         chip.setOnCloseIconClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                arrTags.remove(chip.getText().toString());
                 communityPost_chipGroup_tags.removeView(chip);
             }
         });
@@ -279,7 +282,6 @@ public class NewCommunityPostFragment extends Fragment {
                         try {
                             imageUri = result.getData().getData();
                             communityPost_IMG_ImageView.setImageURI(imageUri);
-                            Log.d(TAG, "test_imageURI " + imageUri);
                             communityPost_IMG_ImageView.setVisibility(View.VISIBLE);
                             communityPost_BTN_selectImage.setText(R.string.change_picture);
                             communityPost_BTN_selectImage.setVisibility(View.VISIBLE);
@@ -320,7 +322,6 @@ public class NewCommunityPostFragment extends Fragment {
     };
 
     private void changeFragment(View v) {
-        resetInputControls();
         Navigation.findNavController(v).navigate(R.id.action_navigation_return_to_community);
         navBar.setVisibility(View.VISIBLE);
     }
@@ -333,6 +334,7 @@ public class NewCommunityPostFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        resetInputControls();
         binding = null;
     }
 

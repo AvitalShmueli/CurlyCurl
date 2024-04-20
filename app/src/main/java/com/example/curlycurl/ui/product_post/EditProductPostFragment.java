@@ -215,11 +215,13 @@ public class EditProductPostFragment extends Fragment {
                         //Clear focus here from searchbox
                         editProductPost_TXT_addTags.clearFocus();
                         Chip chip = new Chip(getContext());
-                        String strTagValue = String.valueOf(editProductPost_TXT_addTags.getEditableText());
-                        chip.setText(strTagValue);
-                        setChipStyle(chip);
-                        editProductPost_chipGroup_tags.addView(chip);
-                        arrTags.add(strTagValue);
+                        String strTagValue = String.valueOf(editProductPost_TXT_addTags.getEditableText()).trim();
+                        if(!strTagValue.isEmpty() && !arrTags.contains(strTagValue)) {
+                            chip.setText(strTagValue);
+                            setChipStyle(chip);
+                            editProductPost_chipGroup_tags.addView(chip);
+                            arrTags.add(strTagValue);
+                        }
                         editProductPost_TXT_addTags.setText("");
                     }
                     return false;
@@ -275,6 +277,7 @@ public class EditProductPostFragment extends Fragment {
         chip.setOnCloseIconClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                arrTags.remove(chip.getText().toString());
                 editProductPost_chipGroup_tags.removeView(chip);
             }
         });
@@ -440,7 +443,6 @@ public class EditProductPostFragment extends Fragment {
                         try {
                             imageUri = result.getData().getData();
                             editProductPost_IMG_ImageView.setImageURI(imageUri);
-                            Log.d(TAG, "test_imageURI " + imageUri);
                             editProductPost_IMG_ImageView.setVisibility(View.VISIBLE);
                             editProductPost_BTN_selectImage.setText(R.string.change_picture);
                             editProductPost_BTN_removeImage.setVisibility(View.VISIBLE);
@@ -485,17 +487,18 @@ public class EditProductPostFragment extends Fragment {
     };
 
     private void changeFragment(View v) {
-        resetInputControls();
         if (isOwner && frag.equals("profile"))
             Navigation.findNavController(v).navigate(R.id.action_navigation_return_to_profile_edit);
         else
             Navigation.findNavController(v).navigate(R.id.action_editProductPostFragment_to_navigation_explore);
         navBar.setVisibility(View.VISIBLE);
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        resetInputControls();
         binding = null;
     }
 

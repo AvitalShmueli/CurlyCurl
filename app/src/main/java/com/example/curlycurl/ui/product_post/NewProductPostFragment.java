@@ -170,11 +170,13 @@ public class NewProductPostFragment extends Fragment {
                     //Clear focus here from searchbox
                     productPost_TXT_addTags.clearFocus();
                     Chip chip = new Chip(getContext());
-                    String strTagValue = String.valueOf(productPost_TXT_addTags.getEditableText());
-                    chip.setText(strTagValue);
-                    setChipStyle(chip);
-                    productPost_chipGroup_tags.addView(chip);
-                    arrTags.add(strTagValue);
+                    String strTagValue = String.valueOf(productPost_TXT_addTags.getEditableText()).trim();
+                    if(!strTagValue.isEmpty() && !arrTags.contains(strTagValue)) {
+                        chip.setText(strTagValue);
+                        setChipStyle(chip);
+                        productPost_chipGroup_tags.addView(chip);
+                        arrTags.add(strTagValue);
+                    }
                     productPost_TXT_addTags.setText("");
                 }
                 return false;
@@ -227,6 +229,7 @@ public class NewProductPostFragment extends Fragment {
         chip.setOnCloseIconClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                arrTags.remove(chip.getText().toString());
                 productPost_chipGroup_tags.removeView(chip);
             }
         });
@@ -305,7 +308,6 @@ public class NewProductPostFragment extends Fragment {
     private void pickImage() {
         Intent intent;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R && android.os.ext.SdkExtensions.getExtensionVersion(android.os.Build.VERSION_CODES.R) >= 2) {
-            //intent = new Intent((MediaStore.ACTION_PICK_IMAGES));
             intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             resultLauncher.launch(intent);
         }
@@ -320,7 +322,6 @@ public class NewProductPostFragment extends Fragment {
                         try {
                             imageUri = result.getData().getData();
                             productPost_IMG_ImageView.setImageURI(imageUri);
-                            Log.d(TAG, "test_imageURI " + imageUri);
                             productPost_IMG_ImageView.setVisibility(View.VISIBLE);
                             productPost_BTN_selectImage.setText(R.string.change_picture);
                             productPost_BTN_removeImage.setVisibility(View.VISIBLE);
@@ -366,13 +367,13 @@ public class NewProductPostFragment extends Fragment {
     };
 
     private void changeFragment(View v) {
-        resetInputControls();
         Navigation.findNavController(v).navigate(R.id.action_navigation_return_to_profile_new);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        resetInputControls();
         binding = null;
     }
 

@@ -60,7 +60,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:imeOptions="actionDone"
-            android:inputType="text" />
+            android:inputType="text"
+            android:enabled="false"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,7 +115,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:clickable="true"
-            android:padding="3dp"
+            android:padding="5dp"
             android:src="@drawable/baseline_help_outline_24"
             android:tint="@color/light_purple" />
     </LinearLayout>

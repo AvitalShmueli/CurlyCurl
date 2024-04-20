@@ -98,7 +98,6 @@ public class CommunityPostsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            //recyclerView.setAdapter(new MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS));
             recyclerView.setAdapter(myAdapter);
         }
         return view;
@@ -115,8 +114,6 @@ public class CommunityPostsFragment extends Fragment {
     }
 
     private void EventChangeListener() {
-
-        communityPostList.clear();
         if (mode == CommunityPostsFragmentMode.COMMUNITY || searchTerm.isEmpty()) {
             showAllPosts();
         } else {
@@ -136,12 +133,15 @@ public class CommunityPostsFragment extends Fragment {
                         Log.e("Firestore error", error.getMessage());
                         return;
                     }
+
+                    communityPostList.clear();
+
                     if (value.getDocumentChanges().size() == 0) {
                         SignalManager.getInstance().toast("No results");
-                        communityPostList.clear();
                         myAdapter.notifyDataSetChanged();
                         return;
                     }
+
                     for (DocumentChange dc : value.getDocumentChanges()) {
                         if (dc.getType() == DocumentChange.Type.ADDED) {
                             CommunityPost p = dc.getDocument().toObject(CommunityPost.class);
@@ -166,6 +166,8 @@ public class CommunityPostsFragment extends Fragment {
                             Log.e("Firestore error", error.getMessage());
                             return;
                         }
+
+                        communityPostList.clear();
 
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             if (dc.getType() == DocumentChange.Type.ADDED) {

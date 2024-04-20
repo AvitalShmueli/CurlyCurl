@@ -73,7 +73,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         ArrayList<String> arrTags = holder.mItem.getTags();
         if(arrTags != null && arrTags.size() > 0){
             for(String s : holder.mItem.getTags())
-                strTags.append("# ").append(s);
+                strTags.append("# ").append(s).append(" ");
             holder.community_LBL_tags.setText(strTags);
             holder.community_LBL_tags.setVisibility(View.VISIBLE);
         }else {
@@ -103,6 +103,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             holder.community_BTN_edit.setVisibility(View.VISIBLE);
             holder.community_SPACE_actions.setVisibility(View.VISIBLE);
         } else {
+            holder.community_BTN_edit.setOnClickListener(null);
             holder.community_BTN_edit.setVisibility(View.GONE);
             holder.community_SPACE_actions.setVisibility(View.GONE);
         }
