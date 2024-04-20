@@ -38,10 +38,14 @@
         tools:layout="@layout/fragment_explore" >
         <action
             android:id="@+id/navigateToEditProductPostFragment_explore"
-            app:destination="@id/editProductPostFragment" />
+            app:destination="@id/editProductPostFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
         <action
             android:id="@+id/navigateToEditCommunityPostFragment_explore"
-            app:destination="@id/editCommunityPostFragment" />
+            app:destination="@id/editCommunityPostFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -56,7 +60,9 @@
             app:exitAnim="@android:anim/fade_out"/>
         <action
             android:id="@+id/navigateToEditCommunityPostFragment_community"
-            app:destination="@id/editCommunityPostFragment" />
+            app:destination="@id/editCommunityPostFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -82,7 +88,9 @@
             app:exitAnim="@android:anim/slide_out_right"/>
         <action
             android:id="@+id/action_editProductPostFragment_to_navigation_explore"
-            app:destination="@id/navigation_explore" />
+            app:destination="@id/navigation_explore"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/editCommunityPostFragment"
@@ -90,10 +98,14 @@
         android:label="EditCommunityPostFragment" >
         <action
             android:id="@+id/action_editCommunityPostFragment_to_navigation_community"
-            app:destination="@id/navigation_community" />
+            app:destination="@id/navigation_community"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
         <action
             android:id="@+id/action_editCommunityPostFragment_to_navigation_explore"
-            app:destination="@id/navigation_explore" />
+            app:destination="@id/navigation_explore"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
 

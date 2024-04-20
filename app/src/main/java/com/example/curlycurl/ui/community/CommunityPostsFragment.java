@@ -144,7 +144,9 @@ public class CommunityPostsFragment extends Fragment {
                     }
                     for (DocumentChange dc : value.getDocumentChanges()) {
                         if (dc.getType() == DocumentChange.Type.ADDED) {
-                            communityPostList.add(dc.getDocument().toObject(CommunityPost.class));
+                            CommunityPost p = dc.getDocument().toObject(CommunityPost.class);
+                            if(!communityPostList.contains(p))
+                                communityPostList.add(p);
                         }
                         myAdapter.notifyDataSetChanged();
                     }

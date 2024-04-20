@@ -15,12 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.curlycurl.App;
-import com.example.curlycurl.Utilities.FirebaseManager;
 import com.example.curlycurl.Interfaces.Callback_CommunityPostSelected;
 import com.example.curlycurl.Interfaces.Callback_ProductPostSelected;
 import com.example.curlycurl.Models.CommunityPost;
 import com.example.curlycurl.Models.Product;
 import com.example.curlycurl.R;
+import com.example.curlycurl.Utilities.FirebaseManager;
 import com.example.curlycurl.Utilities.SignalManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -174,45 +174,49 @@ public class MapsFragment extends Fragment {
     }
 
     private void showMarkerByAddress(Product product) {
-        Geocoder geocoder = new Geocoder(requireContext());
-        try {
-            List<Address> addressList = geocoder.getFromLocationName(product.getCity(), 1);
-            if (!addressList.isEmpty()) {
-                Address location = addressList.get(0);
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                Marker newMarker = mMap.addMarker(
-                        new MarkerOptions()
-                                .position(latLng)
-                                .title(product.getProductName())
-                                .snippet(product.getUserName())
-                                .contentDescription(product.getProductId())
-                );
-                productsOnMap.put(newMarker, product);
+        Geocoder geocoder = new Geocoder(getContext());
+        if(!productsOnMap.containsValue(product)) {
+            try {
+                List<Address> addressList = geocoder.getFromLocationName(product.getCity(), 1);
+                if (!addressList.isEmpty()) {
+                    Address location = addressList.get(0);
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    Marker newMarker = mMap.addMarker(
+                            new MarkerOptions()
+                                    .position(latLng)
+                                    .title(product.getProductName())
+                                    .snippet(product.getUserName())
+                                    .contentDescription(product.getProductId())
+                    );
+                    productsOnMap.put(newMarker, product);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
     }
 
     private void showMarkerByAddress(CommunityPost post) {
-        Geocoder geocoder = new Geocoder(requireContext());
-        try {
-            List<Address> addressList = geocoder.getFromLocationName(post.getCity(), 1);
-            if (!addressList.isEmpty()) {
-                Address location = addressList.get(0);
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                Marker newMarker = mMap.addMarker(
-                        new MarkerOptions()
-                                .position(latLng)
-                                .title(post.getUserName())
-                                .snippet(post.getPost())
-                                .contentDescription(post.getPostId())
-                );
-                postsOnMap.put(newMarker, post);
+        Geocoder geocoder = new Geocoder(getContext());
+        if(!postsOnMap.containsValue(post)) {
+            try {
+                List<Address> addressList = geocoder.getFromLocationName(post.getCity(), 1);
+                if (!addressList.isEmpty()) {
+                    Address location = addressList.get(0);
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    Marker newMarker = mMap.addMarker(
+                            new MarkerOptions()
+                                    .position(latLng)
+                                    .title(post.getUserName())
+                                    .snippet(post.getPost())
+                                    .contentDescription(post.getPostId())
+                    );
+                    postsOnMap.put(newMarker, post);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
     }
@@ -240,7 +244,7 @@ public class MapsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-
+        Log.d(TAG,"Map fragment - onViewCreated");
         firebaseManager = FirebaseManager.getInstance();
 
         if (mapFragment != null) {
@@ -275,5 +279,10 @@ public class MapsFragment extends Fragment {
 
     public void setCallbackCommunityPostSelected(Callback_CommunityPostSelected callbackCommunityPostSelected) {
         this.callbackCommunityPostSelected = callbackCommunityPostSelected;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }

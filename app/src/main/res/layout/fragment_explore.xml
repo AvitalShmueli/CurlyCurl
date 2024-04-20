@@ -34,7 +34,21 @@
             android:clickable="true"
             android:scaleType="fitCenter"
             android:src="@drawable/map"
-            android:tint="@color/dark_purple" />
+            android:tint="@color/dark_purple"
+            android:visibility="gone"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/explore_BTN_map"
+            android:layout_width="@dimen/header_height"
+            android:layout_height="@dimen/header_height"
+            android:layout_alignTop="@id/explore_LBL_title"
+            android:layout_alignEnd="@id/explore_LBL_title"
+            android:layout_marginEnd="15dp"
+            app:icon="@drawable/map"
+            app:iconTint="@color/dark_purple"
+            app:iconSize="30dp"
+            app:iconGravity="start"
+            android:background="@android:color/transparent"/>
 
     </RelativeLayout>
 

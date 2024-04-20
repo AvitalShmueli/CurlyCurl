@@ -129,7 +129,9 @@ public class ProductFragment extends Fragment {
 
                     for (DocumentChange dc : value.getDocumentChanges()) {
                         if (dc.getType() == DocumentChange.Type.ADDED) {
-                            productList.add(dc.getDocument().toObject(Product.class));
+                            Product p = dc.getDocument().toObject(Product.class);
+                            if(!productList.contains(p))
+                                productList.add(p);
                         }
                         myAdapter.notifyDataSetChanged();
                     }
@@ -165,7 +167,9 @@ public class ProductFragment extends Fragment {
                         }
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             if (dc.getType() == DocumentChange.Type.ADDED) {
-                                productList.add((dc.getDocument().toObject(Product.class)));
+                                Product p = dc.getDocument().toObject(Product.class);
+                                if(!productList.contains(p))
+                                    productList.add(p);
                             }
                             myAdapter.notifyDataSetChanged();
                         }
@@ -183,7 +187,9 @@ public class ProductFragment extends Fragment {
 
                                 for (DocumentChange dc : value.getDocumentChanges()) {
                                     if (dc.getType() == DocumentChange.Type.ADDED) {
-                                        productList.add((dc.getDocument().toObject(Product.class)));
+                                        Product p = dc.getDocument().toObject(Product.class);
+                                        if(!productList.contains(p))
+                                            productList.add(p);
                                     }
                                     myAdapter.notifyDataSetChanged();
                                 }

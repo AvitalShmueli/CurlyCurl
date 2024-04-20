@@ -35,8 +35,8 @@ import com.google.android.material.textfield.TextInputEditText;
 public class ExploreFragment extends Fragment {
 
     private FragmentExploreBinding binding;
-    private MaterialButton explore_BTN_marketplace, explore_BTN_community;
-    private ShapeableImageView explore_IMG_map, explore_IMG_search;
+    private MaterialButton explore_BTN_marketplace, explore_BTN_community, explore_BTN_map;
+    private ShapeableImageView explore_IMG_search;
     private TextInputEditText explore_TXT_search;
     private Fragment childFragment;
     private boolean showAsMap;
@@ -65,7 +65,7 @@ public class ExploreFragment extends Fragment {
     private void createBinding() {
         explore_BTN_marketplace = binding.exploreBTNMarketplace;
         explore_BTN_community = binding.exploreBTNCommunity;
-        explore_IMG_map = binding.exploreIMGMap;
+        explore_BTN_map = binding.exploreBTNMap;
         explore_TXT_search = binding.exploreTXTSearch;
         explore_IMG_search = binding.exploreIMGSearch;
     }
@@ -93,7 +93,7 @@ public class ExploreFragment extends Fragment {
             displayedFragment = 1;
             showChildFragment(displayedFragment);
         });
-        explore_IMG_map.setOnClickListener(v -> showAsMap());
+        explore_BTN_map.setOnClickListener(v -> showAsMap());
     }
 
     private void showAsMap() {
@@ -133,7 +133,6 @@ public class ExploreFragment extends Fragment {
                 });
                 ((MapsFragment) childFragment).setSearchTerm(searchTerm);
             }
-            explore_IMG_map.setImageResource(R.drawable.baseline_grid_view_24);
         } else {
             if (fragment == 0) { // products
                 explore_BTN_marketplace.setPaintFlags(explore_BTN_marketplace.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -162,11 +161,12 @@ public class ExploreFragment extends Fragment {
                     }
                 });
             }
-            explore_IMG_map.setImageResource(R.drawable.map);
         }
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.explore_FRAGMENT_list, childFragment).commit();
+        transaction.replace(R.id.explore_FRAGMENT_list, childFragment).addToBackStack(null).commit();
+        explore_BTN_map.setIconResource(!showAsMap ? R.drawable.map : R.drawable.baseline_grid_view_24);
+
     }
 
     private void navigateToEditProductPostFragment(Product product) {
@@ -181,7 +181,7 @@ public class ExploreFragment extends Fragment {
         args.putString("ownerUID", product.getOwnerUID());
         args.putString("userName", product.getUserName());
         args.putString("ownerEmail", product.getOwnerEmail());
-        args.putStringArrayList("tags",product.getTags());
+        args.putStringArrayList("tags", product.getTags());
         args.putString("frag", "explore");
         Navigation.findNavController(requireView()).navigate(R.id.navigateToEditProductPostFragment_explore, args);
 
@@ -195,7 +195,7 @@ public class ExploreFragment extends Fragment {
         args.putString("post_city", post.getCity());
         args.putString("imageURL", post.getImageURL());
         args.putString("userName", post.getUserName());
-        args.putStringArrayList("tags",post.getTags());
+        args.putStringArrayList("tags", post.getTags());
         args.putString("frag", "explore");
         args.putString("mode", String.valueOf(mode));
         Navigation.findNavController(requireView()).navigate(R.id.navigateToEditCommunityPostFragment_explore, args);
@@ -251,6 +251,8 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        childFragment = null;
+        showAsMap = false;
         binding = null;
     }
 }
